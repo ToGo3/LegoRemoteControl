@@ -26,24 +26,70 @@
         android:layout_height="match_parent"
         android:fitsSystemWindows="true">
 
-        <LinearLayout
-            android:id="@+id/fullscreen_content_controls"
-            style="?metaButtonBarStyle"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center_horizontal"
-            android:background="@color/black_overlay"
-            android:orientation="horizontal"
-            tools:ignore="UselessParent">
+            android:layout_height="match_parent"
+            android:layout_gravity="right|bottom">
 
-        </LinearLayout>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/lego"
+                android:src="@drawable/ic_lego"
+                android:layout_marginRight="139dp"
+                android:layout_alignTop="@+id/move_up"
+                android:layout_alignBottom="@+id/wheel"
+                android:layout_marginBottom="25dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
 
-        <ImageView
-            android:layout_width="49dp"
-            android:layout_height="49dp"
-            android:id="@+id/imageView"
-            android:layout_gravity="center_horizontal|bottom"
-            android:src="@drawable/ic_back"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/move_up"
+                android:src="@drawable/move_up"
+                android:layout_alignLeft="@id/lego"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="30dp"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/move_across"
+                android:src="@drawable/move_across"
+                android:layout_alignTop="@+id/lego"
+                android:layout_alignRight="@+id/lego"
+                android:layout_alignEnd="@+id/lego" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/wheel"
+                android:src="@drawable/ic_wheel"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="50dp"
+                android:layout_alignLeft="@+id/lego" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/back"
+                android:src="@drawable/move_back"
+                android:layout_alignParentBottom="true"
+                android:layout_toLeftOf="@id/wheel"
+                android:layout_marginBottom="10dp"
+                android:layout_marginRight="-50dp"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/front"
+                android:src="@drawable/move_front"
+                android:layout_alignParentBottom="true"
+                android:layout_toRightOf="@id/wheel"
+                android:layout_marginBottom="10dp"/>
+        </RelativeLayout>
 
     </FrameLayout>
 

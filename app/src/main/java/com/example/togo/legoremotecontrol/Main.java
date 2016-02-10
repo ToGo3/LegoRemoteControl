@@ -8,7 +8,6 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 
 /**
@@ -86,7 +85,7 @@ public class Main extends AppCompatActivity {
         }
     };
 
-    ImageView imgSwitch;
+    ImageView lego, up, across, wheel, back, front;
     int topY, bottomY, rightX, leftX, eX,eY;
 
     @Override
@@ -94,6 +93,20 @@ public class Main extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+
+        lego = (ImageView)findViewById(R.id.lego);
+        wheel=(ImageView)findViewById(R.id.wheel);
+        up= (ImageView)findViewById(R.id.move_up);
+        across=(ImageView)findViewById(R.id.move_across);
+        back=(ImageView)findViewById(R.id.back);
+        front=(ImageView)findViewById(R.id.front);
+
+        up.setVisibility(View.INVISIBLE);
+        across.setVisibility(View.INVISIBLE);
+        back.setVisibility(View.INVISIBLE);
+        front.setVisibility(View.INVISIBLE);
+
+
 
         mVisible = true;
         mControlsView = findViewById(R.id.fullscreen_content_controls);
@@ -114,30 +127,70 @@ public class Main extends AppCompatActivity {
         //findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
 
 
-        imgSwitch = (ImageView)findViewById(R.id.imageView);
 
-        mContentView.setOnTouchListener(new View.OnTouchListener() {
+
+        lego.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getActionMasked()){
                     case MotionEvent.ACTION_DOWN:
-                        topY=imgSwitch.getTop();
-                        bottomY=imgSwitch.getBottom();
-                        rightX=imgSwitch.getRight();
-                        leftX=imgSwitch.getLeft();
+                        /*topY= lego.getTop();
+                        bottomY= lego.getBottom();
+                        rightX= lego.getRight();
+                        leftX= lego.getLeft();*/
+                        up.setVisibility(View.VISIBLE);
+                        across.setVisibility(View.VISIBLE);
                         break;
                     case MotionEvent.ACTION_MOVE:
-                        eX=(int) event.getX();
+                        /*eX=(int) event.getX();
                         eY=(int)event.getY();
 
                         if(eX>leftX&&eX<rightX&&eY>topY&&eY<bottomY){
-                            imgSwitch.setImageResource(R.drawable.ic_back_move);
+                            lego.setImageResource(R.drawable.ic_back_move);
                         }
                         else {
-                            imgSwitch.setImageResource(R.drawable.ic_back);
-                        }
+                            lego.setImageResource(R.drawable.ic_back);
+                        }*/
                         break;
                     case MotionEvent.ACTION_UP:
+                        up.setVisibility(View.INVISIBLE);
+                        across.setVisibility(View.INVISIBLE);
+                        Log.d("A","Bingo");
+                        break;
+                    default:
+                        break;
+
+                }
+                return true;
+            }
+        });
+
+        wheel.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getActionMasked()){
+                    case MotionEvent.ACTION_DOWN:
+                        /*topY= lego.getTop();
+                        bottomY= lego.getBottom();
+                        rightX= lego.getRight();
+                        leftX= lego.getLeft();*/
+                        back.setVisibility(View.VISIBLE);
+                        front.setVisibility(View.VISIBLE);
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        /*eX=(int) event.getX();
+                        eY=(int)event.getY();
+
+                        if(eX>leftX&&eX<rightX&&eY>topY&&eY<bottomY){
+                            lego.setImageResource(R.drawable.ic_back_move);
+                        }
+                        else {
+                            lego.setImageResource(R.drawable.ic_back);
+                        }*/
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        back.setVisibility(View.INVISIBLE);
+                        front.setVisibility(View.INVISIBLE);
                         Log.d("A","Bingo");
                         break;
                     default:
