@@ -1,6 +1,8 @@
 package com.example.togo.legoremotecontrol;
 
 import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -86,7 +88,10 @@ public class Main extends AppCompatActivity {
     };
 
     ImageView lego, up, across, wheel, back, front;
-    int topY, bottomY, rightX, leftX, eX,eY;
+    boolean flag_up, flag_across, flag_back,flag_front;
+    int backtopY, backbottomY, backrightX, backleftX, fronttopY, frontbottomY, frontrightX, frontleftX, eX,eY;
+
+    //TODO почистить код от станадртных вложений + выключить индуса (разработать классы) + вместить на экран 3 блока
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +110,46 @@ public class Main extends AppCompatActivity {
         across.setVisibility(View.INVISIBLE);
         back.setVisibility(View.INVISIBLE);
         front.setVisibility(View.INVISIBLE);
+
+        backtopY= back.getTop();
+        backbottomY= back.getBottom();
+        backrightX= back.getRight();
+        backleftX= back.getLeft();
+        final Bitmap backOriginal = BitmapFactory.decodeResource(getResources(),
+                R.drawable.move_back);
+
+// Вычисляем ширину и высоту изображения
+        final int backWidth = backOriginal.getWidth();
+        final int backHeight = backOriginal.getHeight();
+
+// Половинки
+        final int bigBackWidth =backWidth+backWidth/4;
+        final int bigBackHeight =backHeight+ backHeight / 4;
+
+// Выводим уменьшенную в два раза картинку во втором ImageView
+        final Bitmap backBig = Bitmap.createScaledBitmap(backOriginal, bigBackWidth,
+                bigBackHeight, false);
+
+
+        fronttopY= front.getTop();
+        frontbottomY= front.getBottom();
+        frontrightX= front.getRight();
+        frontleftX= front.getLeft();
+
+        final Bitmap frontOriginal = BitmapFactory.decodeResource(getResources(),
+                R.drawable.move_front);
+
+// Вычисляем ширину и высоту изображения
+        int frontWidth = frontOriginal.getWidth();
+        int frontHeight = frontOriginal.getHeight();
+
+// Половинки
+        int bigfrontWidth =frontWidth+frontWidth/4;
+        int bigfrontHeight =frontHeight+ frontHeight / 4;
+
+// Выводим уменьшенную в два раза картинку во втором ImageView
+        final Bitmap frontBig = Bitmap.createScaledBitmap(frontOriginal, bigfrontWidth,
+                bigfrontHeight, false);
 
 
 
@@ -140,6 +185,8 @@ public class Main extends AppCompatActivity {
                         leftX= lego.getLeft();*/
                         up.setVisibility(View.VISIBLE);
                         across.setVisibility(View.VISIBLE);
+                        flag_up=false;
+                        flag_across=false;
                         break;
                     case MotionEvent.ACTION_MOVE:
                         /*eX=(int) event.getX();
@@ -170,28 +217,50 @@ public class Main extends AppCompatActivity {
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getActionMasked()){
                     case MotionEvent.ACTION_DOWN:
-                        /*topY= lego.getTop();
-                        bottomY= lego.getBottom();
-                        rightX= lego.getRight();
-                        leftX= lego.getLeft();*/
                         back.setVisibility(View.VISIBLE);
                         front.setVisibility(View.VISIBLE);
+
+                        flag_back=false;
+                        flag_front=false;
+
+                        backtopY= back.getTop();
+                        backbottomY= back.getBottom();
+                        backrightX= back.getRight();
+                        backleftX= back.getLeft();
+
+                        fronttopY= front.getTop();
+                        frontbottomY= front.getBottom();
+                        frontrightX= front.getRight();
+                        frontleftX= front.getLeft();
                         break;
                     case MotionEvent.ACTION_MOVE:
-                        /*eX=(int) event.getX();
-                        eY=(int)event.getY();
+                        eX=(int) event.getX()+wheel.getLeft();
+                        eY=(int)event.getY()+wheel.getTop();
 
-                        if(eX>leftX&&eX<rightX&&eY>topY&&eY<bottomY){
-                            lego.setImageResource(R.drawable.ic_back_move);
+                        if(eX>backleftX&&eX<backrightX&&eY>backtopY&&eY<backbottomY){
+                            back.setImageBitmap(backBig);
+                            flag_back=true;
                         }
                         else {
-                            lego.setImageResource(R.drawable.ic_back);
-                        }*/
+                            back.setImageBitmap(backOriginal);
+                            flag_back=false;
+
+                            if(eX>frontleftX&&eX<frontrightX&&eY>fronttopY&&eY<frontbottomY){
+                                front.setImageBitmap(frontBig);
+                                flag_front=true;
+                            }
+                            else {
+                                front.setImageBitmap(frontOriginal);
+                                flag_front=false;
+                            }
+                        }
                         break;
                     case MotionEvent.ACTION_UP:
-                        back.setVisibility(View.INVISIBLE);
-                        front.setVisibility(View.INVISIBLE);
-                        Log.d("A","Bingo");
+                        if(flag_back) Log.d("A", "Move back");
+                        else back.setVisibility(View.INVISIBLE);
+                        if (flag_front) Log.d("A","Move front");
+                        else front.setVisibility(View.INVISIBLE);
+                        //Log.d("A","Bingo");
                         break;
                     default:
                         break;
