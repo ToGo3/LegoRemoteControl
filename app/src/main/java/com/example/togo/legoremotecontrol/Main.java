@@ -1,16 +1,15 @@
 package com.example.togo.legoremotecontrol;
 
 import android.annotation.SuppressLint;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -35,6 +34,29 @@ public class Main extends AppCompatActivity {
      */
     private static final int UI_ANIMATION_DELAY = 300;
     private final Handler mHideHandler = new Handler();
+    private final Runnable mHideRunnable = new Runnable() {
+        @Override
+        public void run() {
+            hide();
+        }
+    };
+    /**
+     * Touch listener to use for in-layout UI controls to delay hiding the
+     * system UI. This is to prevent the jarring behavior of controls going away
+     * while interacting with activity UI.
+     */
+    private final View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            if (AUTO_HIDE) {
+                delayedHide(AUTO_HIDE_DELAY_MILLIS);
+            }
+            return false;
+        }
+    };
+    Image lego, wheel;
+    ImageArrow across, up, back, front;
+    int eX, eY;
     private View mContentView;
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
@@ -66,90 +88,33 @@ public class Main extends AppCompatActivity {
         }
     };
     private boolean mVisible;
-    private final Runnable mHideRunnable = new Runnable() {
-        @Override
-        public void run() {
-            hide();
-        }
-    };
-    /**
-     * Touch listener to use for in-layout UI controls to delay hiding the
-     * system UI. This is to prevent the jarring behavior of controls going away
-     * while interacting with activity UI.
-     */
-    private final View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View view, MotionEvent motionEvent) {
-            if (AUTO_HIDE) {
-                delayedHide(AUTO_HIDE_DELAY_MILLIS);
-            }
-            return false;
-        }
-    };
 
-    ImageView lego, up, across, wheel, back, front;
-    boolean flag_up, flag_across, flag_back,flag_front;
-    int backtopY, backbottomY, backrightX, backleftX, fronttopY, frontbottomY, frontrightX, frontleftX, eX,eY;
-
-    //TODO почистить код от станадртных вложений + выключить индуса (разработать классы) + вместить на экран 3 блока
+    //TODO почистить код от станадртных вложений
+    //TODO стандартизировать ontouchlister для всех классов IMAGE
+    // TODO программно отрисовать 3 блок (найти картинку-связку)
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
         setContentView(R.layout.activity_main);
 
-        lego = (ImageView)findViewById(R.id.lego);
-        wheel=(ImageView)findViewById(R.id.wheel);
-        up= (ImageView)findViewById(R.id.move_up);
-        across=(ImageView)findViewById(R.id.move_across);
-        back=(ImageView)findViewById(R.id.back);
-        front=(ImageView)findViewById(R.id.front);
 
-        up.setVisibility(View.INVISIBLE);
-        across.setVisibility(View.INVISIBLE);
-        back.setVisibility(View.INVISIBLE);
-        front.setVisibility(View.INVISIBLE);
-
-        backtopY= back.getTop();
-        backbottomY= back.getBottom();
-        backrightX= back.getRight();
-        backleftX= back.getLeft();
-        final Bitmap backOriginal = BitmapFactory.decodeResource(getResources(),
-                R.drawable.move_back);
-
-// Вычисляем ширину и высоту изображения
-        final int backWidth = backOriginal.getWidth();
-        final int backHeight = backOriginal.getHeight();
-
-// Половинки
-        final int bigBackWidth =backWidth+backWidth/4;
-        final int bigBackHeight =backHeight+ backHeight / 4;
-
-// Выводим уменьшенную в два раза картинку во втором ImageView
-        final Bitmap backBig = Bitmap.createScaledBitmap(backOriginal, bigBackWidth,
-                bigBackHeight, false);
+        lego = new Image((ImageView) findViewById(R.id.lego));
+        wheel = new Image((ImageView) findViewById(R.id.wheel));
+        up = new ImageArrow((ImageView) findViewById(R.id.move_up));
+        across = new ImageArrow((ImageView) findViewById(R.id.move_across));
+        back = new ImageArrow((ImageView) findViewById(R.id.back));
+        front = new ImageArrow((ImageView) findViewById(R.id.front));
 
 
-        fronttopY= front.getTop();
-        frontbottomY= front.getBottom();
-        frontrightX= front.getRight();
-        frontleftX= front.getLeft();
+        final RelativeLayout relativeLayout = (RelativeLayout) up.getImageView().getParent();
+        final RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) up.getImageView().getLayoutParams();
+        final RelativeLayout.LayoutParams params1 = (RelativeLayout.LayoutParams) across.getImageView().getLayoutParams();
 
-        final Bitmap frontOriginal = BitmapFactory.decodeResource(getResources(),
-                R.drawable.move_front);
 
-// Вычисляем ширину и высоту изображения
-        int frontWidth = frontOriginal.getWidth();
-        int frontHeight = frontOriginal.getHeight();
-
-// Половинки
-        int bigfrontWidth =frontWidth+frontWidth/4;
-        int bigfrontHeight =frontHeight+ frontHeight / 4;
-
-// Выводим уменьшенную в два раза картинку во втором ImageView
-        final Bitmap frontBig = Bitmap.createScaledBitmap(frontOriginal, bigfrontWidth,
-                bigfrontHeight, false);
+        Log.d("A", params.toString());
 
 
 
@@ -172,37 +137,55 @@ public class Main extends AppCompatActivity {
         //findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
 
 
-
-
-        lego.setOnTouchListener(new View.OnTouchListener() {
+        lego.getImageView().setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getActionMasked()){
+                switch (event.getActionMasked()) {
                     case MotionEvent.ACTION_DOWN:
-                        /*topY= lego.getTop();
-                        bottomY= lego.getBottom();
-                        rightX= lego.getRight();
-                        leftX= lego.getLeft();*/
-                        up.setVisibility(View.VISIBLE);
-                        across.setVisibility(View.VISIBLE);
-                        flag_up=false;
-                        flag_across=false;
+                        up.show();
+                        across.show();
+
+                        up.setIsTouched(false);
+                        across.setIsTouched(false);
+
+                        up.coordinates();
+                        lego.coordinates();
+                        across.coordinates();
                         break;
                     case MotionEvent.ACTION_MOVE:
-                        /*eX=(int) event.getX();
-                        eY=(int)event.getY();
+                        eX = (int) event.getX() + lego.getLeftX();
+                        eY = (int) event.getY() + lego.getTopY();
 
-                        if(eX>leftX&&eX<rightX&&eY>topY&&eY<bottomY){
-                            lego.setImageResource(R.drawable.ic_back_move);
+                        if (up.isHit(eX, eY)) {
+
+                            up.showBig();
+                            params.setMargins(0, 0, 0, 12);
+                            relativeLayout.updateViewLayout(up.getImageView(), params);
+                            up.setIsTouched(true);
+                        } else {
+                            up.showOriginal();
+                            params.setMargins(5, 0, 0, 12);
+                            relativeLayout.updateViewLayout(up.getImageView(), params);
+                            up.setIsTouched(false);
+
+                            if (across.isHit(eX, eY)) {
+                                across.showBig();
+                                params1.setMargins(0, 0, -78, 12);
+                                relativeLayout.updateViewLayout(across.getImageView(), params1);
+                                across.setIsTouched(true);
+                            } else {
+                                across.showOriginal();
+                                params1.setMargins(0, 0, -52, 12);
+                                relativeLayout.updateViewLayout(across.getImageView(), params1);
+                                across.setIsTouched(false);
+                            }
                         }
-                        else {
-                            lego.setImageResource(R.drawable.ic_back);
-                        }*/
                         break;
                     case MotionEvent.ACTION_UP:
-                        up.setVisibility(View.INVISIBLE);
-                        across.setVisibility(View.INVISIBLE);
-                        Log.d("A","Bingo");
+                        if (up.isTouched()) Log.d("A", "Move up");
+                        else up.hide();
+                        if (across.isTouched()) Log.d("A", "Move across");
+                        else across.hide();
                         break;
                     default:
                         break;
@@ -212,54 +195,46 @@ public class Main extends AppCompatActivity {
             }
         });
 
-        wheel.setOnTouchListener(new View.OnTouchListener() {
+        wheel.getImageView().setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getActionMasked()){
+                switch (event.getActionMasked()) {
                     case MotionEvent.ACTION_DOWN:
-                        back.setVisibility(View.VISIBLE);
-                        front.setVisibility(View.VISIBLE);
+                        back.show();
+                        front.show();
 
-                        flag_back=false;
-                        flag_front=false;
+                        back.setIsTouched(false);
+                        front.setIsTouched(false);
 
-                        backtopY= back.getTop();
-                        backbottomY= back.getBottom();
-                        backrightX= back.getRight();
-                        backleftX= back.getLeft();
-
-                        fronttopY= front.getTop();
-                        frontbottomY= front.getBottom();
-                        frontrightX= front.getRight();
-                        frontleftX= front.getLeft();
+                        back.coordinates();
+                        wheel.coordinates();
+                        front.coordinates();
                         break;
                     case MotionEvent.ACTION_MOVE:
-                        eX=(int) event.getX()+wheel.getLeft();
-                        eY=(int)event.getY()+wheel.getTop();
+                        eX = (int) event.getX() + wheel.getLeftX();
+                        eY = (int) event.getY() + wheel.getTopY();
 
-                        if(eX>backleftX&&eX<backrightX&&eY>backtopY&&eY<backbottomY){
-                            back.setImageBitmap(backBig);
-                            flag_back=true;
-                        }
-                        else {
-                            back.setImageBitmap(backOriginal);
-                            flag_back=false;
+                        if (back.isHit(eX, eY)) {
+                            back.showBig();
+                            back.setIsTouched(true);
+                        } else {
+                            back.showOriginal();
+                            back.setIsTouched(false);
 
-                            if(eX>frontleftX&&eX<frontrightX&&eY>fronttopY&&eY<frontbottomY){
-                                front.setImageBitmap(frontBig);
-                                flag_front=true;
-                            }
-                            else {
-                                front.setImageBitmap(frontOriginal);
-                                flag_front=false;
+                            if (front.isHit(eX, eY)) {
+                                front.showBig();
+                                front.setIsTouched(true);
+                            } else {
+                                front.showOriginal();
+                                front.setIsTouched(false);
                             }
                         }
                         break;
                     case MotionEvent.ACTION_UP:
-                        if(flag_back) Log.d("A", "Move back");
-                        else back.setVisibility(View.INVISIBLE);
-                        if (flag_front) Log.d("A","Move front");
-                        else front.setVisibility(View.INVISIBLE);
+                        if (back.isTouched()) Log.d("A", "Move back");
+                        else back.hide();
+                        if (front.isTouched()) Log.d("A", "Move front");
+                        else front.hide();
                         //Log.d("A","Bingo");
                         break;
                     default:
