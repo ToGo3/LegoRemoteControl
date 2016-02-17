@@ -5,9 +5,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -90,31 +91,111 @@ public class Main extends AppCompatActivity {
     private boolean mVisible;
 
     //TODO почистить код от станадртных вложений
-    //TODO стандартизировать ontouchlister для всех классов IMAGE
     // TODO программно отрисовать 3 блок (найти картинку-связку)
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
         setContentView(R.layout.activity_main);
 
+        RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.relativeLayout);
 
-        lego = new Image((ImageView) findViewById(R.id.lego));
-        wheel = new Image((ImageView) findViewById(R.id.wheel));
+
+        wheel = new Image(new ImageView(this));
+        wheel.getImageView().setImageDrawable(getResources().getDrawable(R.drawable.ic_wheel));
+        RelativeLayout.LayoutParams wheelparams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        wheel.getImageView().setId(relativeLayout.getId() + 1);
+        wheelparams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        wheelparams.addRule(RelativeLayout.ALIGN_PARENT_START);
+        wheelparams.setMargins(dpToPx(70), 0, 0, 0);
+        relativeLayout.addView(wheel.getImageView(), wheelparams);
+
+
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+        lego = new Image(new ImageView(this));
+        lego.getImageView().setImageDrawable(getResources().getDrawable(R.drawable.ic_lego));
+
+        //params.addRule(RelativeLayout.ALIGN_PARENT_START);
+        params.addRule(RelativeLayout.ABOVE, wheel.getImageView().getId());
+        params.addRule(RelativeLayout.ALIGN_LEFT, wheel.getImageView().getId());
+        params.setMargins(dpToPx(-12), 0, 0, 0);
+        relativeLayout.addView(lego.getImageView(), params);
+        //lego.getImageView().setId(relativeLayout.getId() + 1);
+
+        //Log.d("A", "" + lego.getImageView().getId());
+
+
+
+        /*wheel = new Image((ImageView) findViewById(R.id.wheel));
         up = new ImageArrow((ImageView) findViewById(R.id.move_up));
         across = new ImageArrow((ImageView) findViewById(R.id.move_across));
         back = new ImageArrow((ImageView) findViewById(R.id.back));
-        front = new ImageArrow((ImageView) findViewById(R.id.front));
+        front = new ImageArrow((ImageView) findViewById(R.id.front));*/
+
+        /*
+            <ImageView
+                android:id="@+id/lego"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/wheel"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginLeft="70dp"
+                android:src="@drawable/ic_lego" />
+
+            <ImageView
+                android:id="@+id/move_up"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/lego"
+                android:layout_alignStart="@id/lego"
+                android:layout_marginBottom="12dp"
+                android:layout_marginLeft="5dp"
+                android:src="@drawable/move_up" />
+
+            <ImageView
+                android:id="@+id/move_across"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/lego"
+                android:layout_alignEnd="@+id/lego"
+                android:layout_marginBottom="12dp"
+                android:layout_marginRight="-35dp"
+                android:src="@drawable/move_across" />
+
+            <ImageView
+                android:id="@+id/wheel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/lego"
+                android:layout_alignParentBottom="true"
+                android:layout_alignStart="@+id/lego"
+                android:layout_marginLeft="12dp"
+                android:src="@drawable/ic_wheel" />
+
+            <ImageView
+                android:id="@+id/back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/wheel"
+                android:layout_marginTop="15dp"
+                android:layout_toLeftOf="@id/wheel"
+                android:src="@drawable/move_back" />
+
+            <ImageView
+                android:id="@+id/front"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/wheel"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="15dp"
+                android:layout_toRightOf="@id/wheel"
+                android:src="@drawable/move_front" />
+                */
 
 
-        final RelativeLayout relativeLayout = (RelativeLayout) up.getImageView().getParent();
-        final RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) up.getImageView().getLayoutParams();
-        final RelativeLayout.LayoutParams params1 = (RelativeLayout.LayoutParams) across.getImageView().getLayoutParams();
 
-
-        Log.d("A", params.toString());
 
 
 
@@ -136,114 +217,10 @@ public class Main extends AppCompatActivity {
         // while interacting with the UI.
         //findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
 
+        //lego.setOnTouchListener(up,across);
 
-        lego.getImageView().setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getActionMasked()) {
-                    case MotionEvent.ACTION_DOWN:
-                        up.show();
-                        across.show();
+        //wheel.setOnTouchListener(back,front);
 
-                        up.setIsTouched(false);
-                        across.setIsTouched(false);
-
-                        up.coordinates();
-                        lego.coordinates();
-                        across.coordinates();
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        eX = (int) event.getX() + lego.getLeftX();
-                        eY = (int) event.getY() + lego.getTopY();
-
-                        if (up.isHit(eX, eY)) {
-
-                            up.showBig();
-                            params.setMargins(0, 0, 0, 12);
-                            relativeLayout.updateViewLayout(up.getImageView(), params);
-                            up.setIsTouched(true);
-                        } else {
-                            up.showOriginal();
-                            params.setMargins(5, 0, 0, 12);
-                            relativeLayout.updateViewLayout(up.getImageView(), params);
-                            up.setIsTouched(false);
-
-                            if (across.isHit(eX, eY)) {
-                                across.showBig();
-                                params1.setMargins(0, 0, -78, 12);
-                                relativeLayout.updateViewLayout(across.getImageView(), params1);
-                                across.setIsTouched(true);
-                            } else {
-                                across.showOriginal();
-                                params1.setMargins(0, 0, -52, 12);
-                                relativeLayout.updateViewLayout(across.getImageView(), params1);
-                                across.setIsTouched(false);
-                            }
-                        }
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        if (up.isTouched()) Log.d("A", "Move up");
-                        else up.hide();
-                        if (across.isTouched()) Log.d("A", "Move across");
-                        else across.hide();
-                        break;
-                    default:
-                        break;
-
-                }
-                return true;
-            }
-        });
-
-        wheel.getImageView().setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getActionMasked()) {
-                    case MotionEvent.ACTION_DOWN:
-                        back.show();
-                        front.show();
-
-                        back.setIsTouched(false);
-                        front.setIsTouched(false);
-
-                        back.coordinates();
-                        wheel.coordinates();
-                        front.coordinates();
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        eX = (int) event.getX() + wheel.getLeftX();
-                        eY = (int) event.getY() + wheel.getTopY();
-
-                        if (back.isHit(eX, eY)) {
-                            back.showBig();
-                            back.setIsTouched(true);
-                        } else {
-                            back.showOriginal();
-                            back.setIsTouched(false);
-
-                            if (front.isHit(eX, eY)) {
-                                front.showBig();
-                                front.setIsTouched(true);
-                            } else {
-                                front.showOriginal();
-                                front.setIsTouched(false);
-                            }
-                        }
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        if (back.isTouched()) Log.d("A", "Move back");
-                        else back.hide();
-                        if (front.isTouched()) Log.d("A", "Move front");
-                        else front.hide();
-                        //Log.d("A","Bingo");
-                        break;
-                    default:
-                        break;
-
-                }
-                return true;
-            }
-        });
 
 
     }
@@ -299,6 +276,16 @@ public class Main extends AppCompatActivity {
     private void delayedHide(int delayMillis) {
         mHideHandler.removeCallbacks(mHideRunnable);
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
+    }
+
+    public int pxToDp(int px) {
+        DisplayMetrics displayMetrics = this.getResources().getDisplayMetrics();
+        return Math.round(px / (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+    }
+
+    public int dpToPx(int dp) {
+        DisplayMetrics displayMetrics = this.getResources().getDisplayMetrics();
+        return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
     }
 
 }

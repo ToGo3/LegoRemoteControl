@@ -32,64 +32,8 @@
             android:layout_height="match_parent"
             android:layout_gravity="right|bottom">
 
-            <ImageView
-                android:id="@+id/lego"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@+id/wheel"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_marginLeft="70dp"
-                android:src="@drawable/ic_lego" />
 
-            <ImageView
-                android:id="@+id/move_up"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@id/lego"
-                android:layout_alignStart="@id/lego"
-                android:layout_marginBottom="12dp"
-                android:layout_marginLeft="5dp"
-                android:src="@drawable/move_up" />
 
-            <ImageView
-                android:id="@+id/move_across"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@+id/lego"
-                android:layout_alignEnd="@+id/lego"
-                android:layout_marginBottom="12dp"
-                android:layout_marginRight="-35dp"
-                android:src="@drawable/move_across" />
-
-            <ImageView
-                android:id="@+id/wheel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/lego"
-                android:layout_alignParentBottom="true"
-                android:layout_alignStart="@+id/lego"
-                android:layout_marginLeft="12dp"
-                android:src="@drawable/ic_wheel" />
-
-            <ImageView
-                android:id="@+id/back"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@id/wheel"
-                android:layout_marginTop="15dp"
-                android:layout_toLeftOf="@id/wheel"
-                android:src="@drawable/move_back" />
-
-            <ImageView
-                android:id="@+id/front"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@id/wheel"
-                android:layout_marginLeft="12dp"
-                android:layout_marginTop="15dp"
-                android:layout_toRightOf="@id/wheel"
-                android:src="@drawable/move_front" />
         </RelativeLayout>
 
     </FrameLayout>
