@@ -8,9 +8,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
+
+import java.util.Vector;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -35,12 +35,6 @@ public class Main extends AppCompatActivity {
      */
     private static final int UI_ANIMATION_DELAY = 300;
     private final Handler mHideHandler = new Handler();
-    private final Runnable mHideRunnable = new Runnable() {
-        @Override
-        public void run() {
-            hide();
-        }
-    };
     /**
      * Touch listener to use for in-layout UI controls to delay hiding the
      * system UI. This is to prevent the jarring behavior of controls going away
@@ -58,6 +52,7 @@ public class Main extends AppCompatActivity {
     Image lego, wheel;
     ImageArrow across, up, back, front;
     int eX, eY;
+    Vector<ImageRobot> robots;
     private View mContentView;
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
@@ -88,10 +83,16 @@ public class Main extends AppCompatActivity {
             mControlsView.setVisibility(View.VISIBLE);
         }
     };
-    private boolean mVisible;
+    private final Runnable mHideRunnable = new Runnable() {
+        @Override
+        public void run() {
+            hide();
+        }
+    };
 
     //TODO почистить код от станадртных вложений
     // TODO программно отрисовать 3 блок (найти картинку-связку)
+    private boolean mVisible;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,40 +100,68 @@ public class Main extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.relativeLayout);
+        robots = new Vector<ImageRobot>();
+
+        for (int i = 0; i < 3; i++) {
+            robots.add(new ImageRobot(this, relativeLayout.getId() + 1 + i * 2, dpToPx(70 + (i * 100))));
+            relativeLayout.addView(robots.get(i).getWheel().getImageView(), robots.get(i).getWheel().getParams());
+            relativeLayout.addView(robots.get(i).getBlock().getImageView(), robots.get(i).getBlock().getParams());
+        }
+
+        /*ImageRobot imageRobot1=new ImageRobot(this,relativeLayout.getId()+1,dpToPx(350));
+        ImageRobot imageRobot2=new ImageRobot(this,relativeLayout.getId()+3,dpToPx(70));
+
+        relativeLayout.addView(imageRobot1.getWheel().getImageView(),imageRobot1.getWheel().getParams());
+        relativeLayout.addView(imageRobot1.getBlock().getImageView(),imageRobot1.getBlock().getParams());
+
+        relativeLayout.addView(imageRobot2.getWheel().getImageView(),imageRobot2.getWheel().getParams());
+        relativeLayout.addView(imageRobot2.getBlock().getImageView(), imageRobot2.getBlock().getParams());
+
+        imageRobot1.initWheelArrows(this, true, false);
+        relativeLayout.addView(imageRobot1.getFront().getImageView(),imageRobot1.getFront().getParams());
+
+        imageRobot2.initWheelArrows(this,false,true);
+        relativeLayout.addView(imageRobot2.getBack().getImageView(),imageRobot2.getBack().getParams());*/
 
 
-        wheel = new Image(new ImageView(this));
-        wheel.getImageView().setImageDrawable(getResources().getDrawable(R.drawable.ic_wheel));
-        RelativeLayout.LayoutParams wheelparams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        wheel.getImageView().setId(relativeLayout.getId() + 1);
-        wheelparams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-        wheelparams.addRule(RelativeLayout.ALIGN_PARENT_START);
-        wheelparams.setMargins(dpToPx(70), 0, 0, 0);
-        relativeLayout.addView(wheel.getImageView(), wheelparams);
+        /*wheel = new Image(new ImageView(this),relativeLayout.getId() + 1,getResources().getDrawable(R.drawable.ic_wheel));
+        wheel.getParams().addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        wheel.getParams().addRule(RelativeLayout.ALIGN_PARENT_START);
+        wheel.getParams().setMargins(dpToPx(70), 0, 0, 0);
+        relativeLayout.addView(wheel.getImageView(), wheel.getParams());
 
 
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        lego = new Image(new ImageView(this),wheel.getId()+1,getResources().getDrawable(R.drawable.ic_lego));
+        lego.getParams().addRule(RelativeLayout.ABOVE, wheel.getImageView().getId());
+        lego.getParams().addRule(RelativeLayout.ALIGN_LEFT, wheel.getImageView().getId());
+        lego.getParams().setMargins(dpToPx(-10), 0, 0, 0);
+        relativeLayout.addView(lego.getImageView(), lego.getParams());
+        
+        up=new ImageArrow(new ImageView(this),lego.getId()+1,getResources().getDrawable(R.drawable.move_up));
+        up.getParams().addRule(RelativeLayout.ABOVE, lego.getId());
+        up.getParams().addRule(RelativeLayout.ALIGN_START, lego.getId());
+        up.getParams().setMargins(dpToPx(5), 0, 0, dpToPx(12));
+        relativeLayout.addView(up.getImageView(), up.getParams());
 
-        lego = new Image(new ImageView(this));
-        lego.getImageView().setImageDrawable(getResources().getDrawable(R.drawable.ic_lego));
+        across=new ImageArrow(new ImageView(this),up.getId()+1,getResources().getDrawable(R.drawable.move_across));
+        across.getParams().addRule(RelativeLayout.ABOVE,lego.getId());
+        across.getParams().addRule(RelativeLayout.ALIGN_END, lego.getId());
+        across.getParams().setMargins(0, 0, dpToPx(-35), dpToPx(12));
+        relativeLayout.addView(across.getImageView(), across.getParams());
 
-        //params.addRule(RelativeLayout.ALIGN_PARENT_START);
-        params.addRule(RelativeLayout.ABOVE, wheel.getImageView().getId());
-        params.addRule(RelativeLayout.ALIGN_LEFT, wheel.getImageView().getId());
-        params.setMargins(dpToPx(-12), 0, 0, 0);
-        relativeLayout.addView(lego.getImageView(), params);
-        //lego.getImageView().setId(relativeLayout.getId() + 1);
+        back=new ImageArrow(new ImageView(this),across.getId()+1,getResources().getDrawable(R.drawable.move_back));
+        back.getParams().addRule(RelativeLayout.ALIGN_TOP,wheel.getId());
+        back.getParams().addRule(RelativeLayout.LEFT_OF, wheel.getId());
+        back.getParams().setMargins(0,dpToPx(15),dpToPx(12),0);
+        relativeLayout.addView(back.getImageView(),back.getParams());
 
-        //Log.d("A", "" + lego.getImageView().getId());
-
-
-
-        /*wheel = new Image((ImageView) findViewById(R.id.wheel));
-        up = new ImageArrow((ImageView) findViewById(R.id.move_up));
-        across = new ImageArrow((ImageView) findViewById(R.id.move_across));
-        back = new ImageArrow((ImageView) findViewById(R.id.back));
-        front = new ImageArrow((ImageView) findViewById(R.id.front));*/
-
+        front=new ImageArrow(new ImageView(this),back.getId()+1,getResources().getDrawable(R.drawable.move_front));
+        front.getParams().addRule(RelativeLayout.ALIGN_TOP,wheel.getId());
+        front.getParams().addRule(RelativeLayout.RIGHT_OF, wheel.getId());
+        front.getParams().setMargins(dpToPx(12),dpToPx(15),0,0);
+        relativeLayout.addView(front.getImageView(),front.getParams());*/
+        
+       
         /*
             <ImageView
                 android:id="@+id/lego"
@@ -217,9 +246,9 @@ public class Main extends AppCompatActivity {
         // while interacting with the UI.
         //findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
 
-        //lego.setOnTouchListener(up,across);
+//        lego.setOnTouchListener(up,across);
 
-        //wheel.setOnTouchListener(back,front);
+        // wheel.setOnTouchListener(back,front);
 
 
 

@@ -1,9 +1,12 @@
 package com.example.togo.legoremotecontrol;
 
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 /**
  * Created by ToGo on 16.02.2016.
@@ -11,10 +14,15 @@ import android.widget.ImageView;
 public class Image {
     private ImageView imageView;
 
+    private RelativeLayout.LayoutParams params;
+
     private int topY, bottomY, rightX, leftX;
 
-    public Image(ImageView imageView) {
+    public Image(ImageView imageView, int id, Drawable drawable) {
         this.imageView = imageView;
+        this.params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        this.imageView.setId(id);
+        this.imageView.setImageDrawable(drawable);
     }
 
     public int getTopY() {
@@ -33,9 +41,19 @@ public class Image {
         return bottomY;
     }
 
+    public int getId() {
+        return imageView.getId();
+    }
+
     public ImageView getImageView() {
         return imageView;
     }
+
+    public RelativeLayout.LayoutParams getParams() {
+        return params;
+    }
+
+
 
     public void coordinates() {
         topY = getImageView().getTop();
@@ -52,9 +70,11 @@ public class Image {
                     switch (event.getActionMasked()) {
                         case MotionEvent.ACTION_DOWN:
                             for (ImageArrow imageArrow : args) {
-                                imageArrow.show();
-                                imageArrow.setIsTouched(false);
-                                imageArrow.coordinates();
+                                if (imageArrow.isEnable) {
+                                    imageArrow.show();
+                                    imageArrow.setIsTouched(false);
+                                    imageArrow.coordinates();
+                                }
 
                             }
                             coordinates();
@@ -64,21 +84,25 @@ public class Image {
                             int eY = (int) event.getY() + getTopY();
 
                             for (ImageArrow imageArrow : args) {
-                                if (imageArrow.isHit(eX, eY)) {
-                                    imageArrow.showBig();
-                                    imageArrow.setIsTouched(true);
-                                } else {
-                                    imageArrow.showOriginal();
-                                    imageArrow.setIsTouched(false);
+                                if (imageArrow.isEnable) {
+                                    if (imageArrow.isHit(eX, eY)) {
+                                        imageArrow.showBig();
+                                        imageArrow.setIsTouched(true);
+                                    } else {
+                                        imageArrow.showOriginal();
+                                        imageArrow.setIsTouched(false);
+                                    }
                                 }
                             }
                             break;
                         case MotionEvent.ACTION_UP:
                             for (ImageArrow imageArrow : args) {
-                                if (imageArrow.isTouched())
-                                    Log.d("A", imageArrow.toString());
-                                else
-                                    imageArrow.hide();
+                                if (imageArrow.isEnable) {
+                                    if (imageArrow.isTouched())
+                                        Log.d("A", imageArrow.toString());
+                                    else
+                                        imageArrow.hide();
+                                }
                             }
                             break;
                         default:
