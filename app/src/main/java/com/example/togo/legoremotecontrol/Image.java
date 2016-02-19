@@ -1,12 +1,14 @@
 package com.example.togo.legoremotecontrol;
 
 import android.graphics.drawable.Drawable;
-import android.util.Log;
+import android.os.AsyncTask;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+
+import wrapper.SmartSpaceTriplet;
 
 /**
  * Created by ToGo on 16.02.2016.
@@ -62,7 +64,7 @@ public class Image {
         leftX = getImageView().getLeft();
     }
 
-    public void setOnTouchListener(final ImageArrow... args) {
+    public void setOnTouchListener(final String blockName, final ImageArrow... args) {
         if (args.length != 0) {
             this.imageView.setOnTouchListener(new View.OnTouchListener() {
                 @Override
@@ -99,7 +101,9 @@ public class Image {
                             for (ImageArrow imageArrow : args) {
                                 if (imageArrow.isEnable) {
                                     if (imageArrow.isTouched())
-                                        Log.d("A", imageArrow.toString());
+                                        new useSmart().execute(new String[]{blockName, imageArrow.getName()});
+
+                                        //Log.d("A", imageArrow.toString());
                                     else
                                         imageArrow.hide();
                                 }
@@ -113,6 +117,36 @@ public class Image {
                 }
             });
 
+        }
+
+    }
+
+    class useSmart extends AsyncTask<String[], Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(String[]... params) {
+            SmartM3.insert(new SmartSpaceTriplet(params[0][0], "commandIs", params[0][1]));
+            return true;
+        }
+
+        protected void onPreExecute() {
+            //PD.showDialog(MainActivity.this, "Connecting...");
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            /*//PD.hideDialog();
+            if (result) {
+
+                ListOfLastUse.setList("ip_", ip);
+
+                Intent intent = new Intent(MainActivity.this, WordActivity.class).addFlags(
+                        Intent.FLAG_ACTIVITY_CLEAR_TASK).addFlags(
+                        Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            } else {
+                PD.showToast(MainActivity.this, "Error! Check your connecting!");
+            }*/
         }
 
     }

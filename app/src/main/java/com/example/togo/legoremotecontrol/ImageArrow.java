@@ -12,14 +12,16 @@ import android.widget.ImageView;
 public class ImageArrow extends Image {
     boolean isTouched, isEnable;
     private Bitmap bitmapOriginal, bitmapBig;
+    private String name;
 
-    public ImageArrow(ImageView imageView, int id, Drawable drawable, boolean isEnable) {
+    public ImageArrow(ImageView imageView, int id, Drawable drawable, boolean isEnable, String name) {
         super(imageView, id, drawable);
         imageView.setVisibility(View.INVISIBLE); //default
         bitmapOriginal = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
         bitmapBig = Bitmap.createScaledBitmap(bitmapOriginal, bitmapOriginal.getWidth() + bitmapOriginal.getWidth() / 4,
                 bitmapOriginal.getHeight() + bitmapOriginal.getHeight() / 4, false);
         setIsEnable(isEnable);
+        setName(name);
     }
 
     public void show() {
@@ -59,6 +61,15 @@ public class ImageArrow extends Image {
 
     public void setIsEnable(boolean isEnable) {
         this.isEnable = isEnable;
+    }
+
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
 

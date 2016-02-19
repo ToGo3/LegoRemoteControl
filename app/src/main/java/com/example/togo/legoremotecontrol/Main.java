@@ -89,7 +89,6 @@ public class Main extends AppCompatActivity {
             hide();
         }
     };
-
     //TODO почистить код от станадртных вложений
     // TODO программно отрисовать 3 блок (найти картинку-связку)
     private boolean mVisible;
@@ -103,10 +102,13 @@ public class Main extends AppCompatActivity {
         robots = new Vector<ImageRobot>();
 
         for (int i = 0; i < 3; i++) {
-            robots.add(new ImageRobot(this, relativeLayout.getId() + 1 + i * 2, dpToPx(70 + (i * 100))));
-            relativeLayout.addView(robots.get(i).getWheel().getImageView(), robots.get(i).getWheel().getParams());
-            relativeLayout.addView(robots.get(i).getBlock().getImageView(), robots.get(i).getBlock().getParams());
+            robots.add(new ImageRobot(this, relativeLayout.getId() + 1 + i * 2, dpToPx(70 + (i * 100)), "block" + i));
+            //relativeLayout.addView(robots.get(i).getWheel().getImageView(), robots.get(i).getWheel().getParams());
+            //relativeLayout.addView(robots.get(i).getBlock().getImageView(), robots.get(i).getBlock().getParams());
         }
+        robots.lastElement().initWheelArrows(true, false);
+        robots.lastElement().initBlockArrows(true, false);
+        //relativeLayout.addView(robots.lastElement().getFront().getImageView(),robots.lastElement().getFront().getParams());
 
         /*ImageRobot imageRobot1=new ImageRobot(this,relativeLayout.getId()+1,dpToPx(350));
         ImageRobot imageRobot2=new ImageRobot(this,relativeLayout.getId()+3,dpToPx(70));
