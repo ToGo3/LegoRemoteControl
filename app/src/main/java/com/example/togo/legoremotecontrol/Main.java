@@ -91,6 +91,7 @@ public class Main extends AppCompatActivity {
     };
     //TODO почистить код от станадртных вложений
     // TODO программно отрисовать 3 блок (найти картинку-связку)
+    //TODO слушать инфу из смарта
     private boolean mVisible;
 
     @Override
@@ -106,7 +107,9 @@ public class Main extends AppCompatActivity {
             //relativeLayout.addView(robots.get(i).getWheel().getImageView(), robots.get(i).getWheel().getParams());
             //relativeLayout.addView(robots.get(i).getBlock().getImageView(), robots.get(i).getBlock().getParams());
         }
+        robots.lastElement().setName("forwardBlock");
         robots.lastElement().initWheelArrows(true, false);
+
         robots.lastElement().initBlockArrows(true, false);
         //relativeLayout.addView(robots.lastElement().getFront().getImageView(),robots.lastElement().getFront().getParams());
 
