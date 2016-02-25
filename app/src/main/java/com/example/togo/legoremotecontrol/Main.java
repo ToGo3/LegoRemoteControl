@@ -1,6 +1,10 @@
 package com.example.togo.legoremotecontrol;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
@@ -34,7 +38,16 @@ public class Main extends AppCompatActivity {
      * and a change of the status and navigation bar.
      */
     private static final int UI_ANIMATION_DELAY = 300;
+    private static Vector<ImageRobot> robots;
+    private static Context context;
+    private static int relativeLayoutId;
     private final Handler mHideHandler = new Handler();
+    private final Runnable mHideRunnable = new Runnable() {
+        @Override
+        public void run() {
+            hide();
+        }
+    };
     /**
      * Touch listener to use for in-layout UI controls to delay hiding the
      * system UI. This is to prevent the jarring behavior of controls going away
@@ -49,10 +62,24 @@ public class Main extends AppCompatActivity {
             return false;
         }
     };
+    //TODO почистить код от станадртных вложений
+    // TODO программно отрисовать 3 блок (найти картинку-связку)
+    //TODO слушать инфу из смарта
     Image lego, wheel;
     ImageArrow across, up, back, front;
     int eX, eY;
-    Vector<ImageRobot> robots;
+    private View mControlsView;
+    private final Runnable mShowPart2Runnable = new Runnable() {
+        @Override
+        public void run() {
+            // Delayed display of UI elements
+            ActionBar actionBar = getSupportActionBar();
+            if (actionBar != null) {
+                actionBar.show();
+            }
+            mControlsView.setVisibility(View.VISIBLE);
+        }
+    };
     private View mContentView;
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
@@ -71,38 +98,39 @@ public class Main extends AppCompatActivity {
                     | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         }
     };
-    private View mControlsView;
-    private final Runnable mShowPart2Runnable = new Runnable() {
-        @Override
-        public void run() {
-            // Delayed display of UI elements
-            ActionBar actionBar = getSupportActionBar();
-            if (actionBar != null) {
-                actionBar.show();
-            }
-            mControlsView.setVisibility(View.VISIBLE);
-        }
-    };
-    private final Runnable mHideRunnable = new Runnable() {
-        @Override
-        public void run() {
-            hide();
-        }
-    };
-    //TODO почистить код от станадртных вложений
-    // TODO программно отрисовать 3 блок (найти картинку-связку)
-    //TODO слушать инфу из смарта
     private boolean mVisible;
+
+    private static void paintBlock(int i, boolean back, boolean front, boolean up, boolean across) {
+
+        robots.add(new ImageRobot(context, relativeLayoutId + 1 + i * 2, dpToPx(70 + (i * 100)), "block" + i));
+        //relativeLayout.addView(robots.get(i).getWheel().getImageView(), robots.get(i).getWheel().getParams());
+        //relativeLayout.addView(robots.get(i).getBlock().getImageView(), robots.get(i).getBlock().getParams());
+        //robots.lastElement().setName("forwardBlock");
+        robots.lastElement().initWheelArrows(front, back);
+        robots.lastElement().initBlockArrows(up, across);
+
+    }
+
+    public static int dpToPx(int dp) {
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        context = this;
 
         RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.relativeLayout);
+        relativeLayoutId = relativeLayout.getId();
         robots = new Vector<ImageRobot>();
 
-        for (int i = 0; i < 3; i++) {
+        new updateFromSmart().execute();
+        //TODO SmartM3.subscribe();
+        //TODO SmartM3.leave();
+
+        /*for (int i = 0; i < 3; i++) {
             robots.add(new ImageRobot(this, relativeLayout.getId() + 1 + i * 2, dpToPx(70 + (i * 100)), "block" + i));
             //relativeLayout.addView(robots.get(i).getWheel().getImageView(), robots.get(i).getWheel().getParams());
             //relativeLayout.addView(robots.get(i).getBlock().getImageView(), robots.get(i).getBlock().getParams());
@@ -110,7 +138,7 @@ public class Main extends AppCompatActivity {
         robots.lastElement().setName("forwardBlock");
         robots.lastElement().initWheelArrows(true, false);
 
-        robots.lastElement().initBlockArrows(true, false);
+        robots.lastElement().initBlockArrows(true, false);*/
         //relativeLayout.addView(robots.lastElement().getFront().getImageView(),robots.lastElement().getFront().getParams());
 
         /*ImageRobot imageRobot1=new ImageRobot(this,relativeLayout.getId()+1,dpToPx(350));
@@ -141,7 +169,7 @@ public class Main extends AppCompatActivity {
         lego.getParams().addRule(RelativeLayout.ALIGN_LEFT, wheel.getImageView().getId());
         lego.getParams().setMargins(dpToPx(-10), 0, 0, 0);
         relativeLayout.addView(lego.getImageView(), lego.getParams());
-        
+
         up=new ImageArrow(new ImageView(this),lego.getId()+1,getResources().getDrawable(R.drawable.move_up));
         up.getParams().addRule(RelativeLayout.ABOVE, lego.getId());
         up.getParams().addRule(RelativeLayout.ALIGN_START, lego.getId());
@@ -165,8 +193,8 @@ public class Main extends AppCompatActivity {
         front.getParams().addRule(RelativeLayout.RIGHT_OF, wheel.getId());
         front.getParams().setMargins(dpToPx(12),dpToPx(15),0,0);
         relativeLayout.addView(front.getImageView(),front.getParams());*/
-        
-       
+
+
         /*
             <ImageView
                 android:id="@+id/lego"
@@ -317,9 +345,71 @@ public class Main extends AppCompatActivity {
         return Math.round(px / (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
     }
 
-    public int dpToPx(int dp) {
-        DisplayMetrics displayMetrics = this.getResources().getDisplayMetrics();
-        return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+    @Override
+    public void onBackPressed() {
+        openQuitDialog();
     }
+
+    private void openQuitDialog() {
+        AlertDialog.Builder quitDialog = new AlertDialog.Builder(
+                context);
+        quitDialog.setTitle("Выход: Вы уверены?");
+
+        quitDialog.setPositiveButton("Да!", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                SmartM3.leave();
+                finish();
+            }
+        });
+
+        quitDialog.setNegativeButton("Нет", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+        quitDialog.show();
+    }
+
+    public static class updateFromSmart extends AsyncTask<Void, Void, Integer> {
+
+        protected void onPreExecute() {
+            PD.showDialog(Main.context, "Inserting...");
+        }
+
+
+        @Override
+        protected Integer doInBackground(Void... params) {
+            return SmartM3.update();
+        }
+
+        protected void onPostExecute(Integer status) {
+            if (status != 0) {
+                robots.clear();
+
+                int count = Character.getNumericValue(String.valueOf(status).charAt(0));
+                for (int i = count; i >= 1; i++) {
+                    boolean back = false, front = false, up = false, across = false;
+                    if (status % 10 == 1) {
+                        back = true;
+                        front = true;
+                    }
+                    status %= 10;
+                    if (status % 10 == 1) {
+                        up = true;
+                    }
+                    status %= 10;
+                    if (status == count)
+                        across = true;
+                    paintBlock(i - 1, back, front, up, across);
+
+                }
+
+            }
+            PD.hideDialog();
+
+        }
+    }
+
 
 }
