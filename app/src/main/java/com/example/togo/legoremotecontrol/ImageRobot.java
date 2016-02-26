@@ -60,12 +60,13 @@ public class ImageRobot {
 
 
         back = new ImageArrow(new ImageView(context), -1, context.getResources().getDrawable(R.drawable.move_back), isBackEnable, "back");
-        back.getParams().addRule(RelativeLayout.ALIGN_TOP, wheel.getId());
-        back.getParams().addRule(RelativeLayout.LEFT_OF, wheel.getId());
+        back.getParams().addRule(RelativeLayout.ALIGN_TOP, this.wheel.getId());
+        //back.getParams().addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+        back.getParams().addRule(RelativeLayout.LEFT_OF, this.block.getId());
         back.getParams().setMargins(0, dpToPx(15), dpToPx(12), 0);
         relativeLayout.addView(back.getImageView(), back.getParams());
 
-        wheel.setOnTouchListener(name, front, back);
+        this.wheel.setOnTouchListener(name, front, back);
 
     }
 

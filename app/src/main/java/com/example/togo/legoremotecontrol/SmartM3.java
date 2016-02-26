@@ -12,10 +12,11 @@ import wrapper.SmartSpaceTriplet;
 public class SmartM3 {
 
     private static SmartSpaceKPI smartSpaceKPI;
+    private static String ip = "192.168.1.1";
 
     public static boolean insert(SmartSpaceTriplet triplet) {
         try {
-            smartSpaceKPI = new SmartSpaceKPI("192.168.2.101", 10010, "x");
+            smartSpaceKPI = new SmartSpaceKPI(ip, 10010, "x");
             if (triplet != null) {
                 smartSpaceKPI.insert(triplet);
             }
@@ -37,13 +38,13 @@ public class SmartM3 {
     public static int update() {
         int status = 0;
         try {
-            smartSpaceKPI = new SmartSpaceKPI("192.168.2.101", 10010, "x");
-            Vector<SmartSpaceTriplet> query = smartSpaceKPI.query(new SmartSpaceTriplet("Robot", "blockCount", null));
+            smartSpaceKPI = new SmartSpaceKPI(ip, 10010, "x");
+            Vector<SmartSpaceTriplet> query = smartSpaceKPI.query(new SmartSpaceTriplet("robot", "blockAmount", null));
             if (!query.isEmpty()) {
                 status = Integer.parseInt(query.lastElement().getObject());
                 for (int i = 0; i < Integer.parseInt(query.lastElement().getObject()); i++) {
                     status *= 100;
-                    Vector<SmartSpaceTriplet> blockQuery = smartSpaceKPI.query(new SmartSpaceTriplet("Block" + i, "has", null));
+                    Vector<SmartSpaceTriplet> blockQuery = smartSpaceKPI.query(new SmartSpaceTriplet("block" + i, "has", null));
                     if (!blockQuery.isEmpty()) {
                         for (SmartSpaceTriplet triplet : blockQuery) {
                             if (triplet.getObject().equals("liftEngine"))
@@ -71,8 +72,8 @@ public class SmartM3 {
 
     public static void subscribe() {
         try {
-            smartSpaceKPI = new SmartSpaceKPI("192.168.2.101", 10010, "x");
-            smartSpaceKPI.subscribe(new SmartSpaceTriplet("Robot", "blockCount", null), new Handler());
+            smartSpaceKPI = new SmartSpaceKPI(ip, 10010, "x");
+            smartSpaceKPI.subscribe(new SmartSpaceTriplet("robot", "blockAmount", null), new Handler());
 
         } catch (SmartSpaceException e) {
             e.printStackTrace();

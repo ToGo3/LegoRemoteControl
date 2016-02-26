@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -38,6 +39,7 @@ public class Main extends AppCompatActivity {
      * and a change of the status and navigation bar.
      */
     private static final int UI_ANIMATION_DELAY = 300;
+    public static Handler handler;
     private static Vector<ImageRobot> robots;
     private static Context context;
     private static int relativeLayoutId;
@@ -64,10 +66,8 @@ public class Main extends AppCompatActivity {
     };
     //TODO почистить код от станадртных вложений
     // TODO программно отрисовать 3 блок (найти картинку-связку)
-    //TODO слушать инфу из смарта
-    Image lego, wheel;
-    ImageArrow across, up, back, front;
-    int eX, eY;
+    //TODO добавить кнопку стоп
+    private Thread thread;
     private View mControlsView;
     private final Runnable mShowPart2Runnable = new Runnable() {
         @Override
@@ -100,20 +100,19 @@ public class Main extends AppCompatActivity {
     };
     private boolean mVisible;
 
-    private static void paintBlock(int i, boolean back, boolean front, boolean up, boolean across) {
 
-        robots.add(new ImageRobot(context, relativeLayoutId + 1 + i * 2, dpToPx(70 + (i * 100)), "block" + i));
-        //relativeLayout.addView(robots.get(i).getWheel().getImageView(), robots.get(i).getWheel().getParams());
-        //relativeLayout.addView(robots.get(i).getBlock().getImageView(), robots.get(i).getBlock().getParams());
-        //robots.lastElement().setName("forwardBlock");
-        robots.lastElement().initWheelArrows(front, back);
-        robots.lastElement().initBlockArrows(up, across);
-
-    }
 
     public static int dpToPx(int dp) {
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+    }
+
+    private static void paintBlock(int i, boolean back, boolean front, boolean up, boolean across) {
+
+        robots.add(new ImageRobot(context, relativeLayoutId + 1 + i * 2, dpToPx(70 + (i * 150)), "block" + i));
+        robots.lastElement().initWheelArrows(front, back);
+        robots.lastElement().initBlockArrows(up, across);
+
     }
 
     @Override
@@ -122,144 +121,34 @@ public class Main extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         context = this;
 
-        RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.relativeLayout);
+        final RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.relativeLayout);
         relativeLayoutId = relativeLayout.getId();
         robots = new Vector<ImageRobot>();
 
         new updateFromSmart().execute();
-        //TODO SmartM3.subscribe();
-        //TODO SmartM3.leave();
 
-        /*for (int i = 0; i < 3; i++) {
-            robots.add(new ImageRobot(this, relativeLayout.getId() + 1 + i * 2, dpToPx(70 + (i * 100)), "block" + i));
-            //relativeLayout.addView(robots.get(i).getWheel().getImageView(), robots.get(i).getWheel().getParams());
-            //relativeLayout.addView(robots.get(i).getBlock().getImageView(), robots.get(i).getBlock().getParams());
-        }
-        robots.lastElement().setName("forwardBlock");
-        robots.lastElement().initWheelArrows(true, false);
+        handler = new Handler() {
+            public void handleMessage(android.os.Message msg) {
+                relativeLayout.removeAllViewsInLayout();
+                new updateFromSmart().execute();
+            }
+        };
 
-        robots.lastElement().initBlockArrows(true, false);*/
-        //relativeLayout.addView(robots.lastElement().getFront().getImageView(),robots.lastElement().getFront().getParams());
+        thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                SmartM3.subscribe();
+                do {
+                    if (Thread.interrupted()) {
+                        SmartM3.leave();
+                    }
 
-        /*ImageRobot imageRobot1=new ImageRobot(this,relativeLayout.getId()+1,dpToPx(350));
-        ImageRobot imageRobot2=new ImageRobot(this,relativeLayout.getId()+3,dpToPx(70));
+                }
+                while (true);
 
-        relativeLayout.addView(imageRobot1.getWheel().getImageView(),imageRobot1.getWheel().getParams());
-        relativeLayout.addView(imageRobot1.getBlock().getImageView(),imageRobot1.getBlock().getParams());
-
-        relativeLayout.addView(imageRobot2.getWheel().getImageView(),imageRobot2.getWheel().getParams());
-        relativeLayout.addView(imageRobot2.getBlock().getImageView(), imageRobot2.getBlock().getParams());
-
-        imageRobot1.initWheelArrows(this, true, false);
-        relativeLayout.addView(imageRobot1.getFront().getImageView(),imageRobot1.getFront().getParams());
-
-        imageRobot2.initWheelArrows(this,false,true);
-        relativeLayout.addView(imageRobot2.getBack().getImageView(),imageRobot2.getBack().getParams());*/
-
-
-        /*wheel = new Image(new ImageView(this),relativeLayout.getId() + 1,getResources().getDrawable(R.drawable.ic_wheel));
-        wheel.getParams().addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-        wheel.getParams().addRule(RelativeLayout.ALIGN_PARENT_START);
-        wheel.getParams().setMargins(dpToPx(70), 0, 0, 0);
-        relativeLayout.addView(wheel.getImageView(), wheel.getParams());
-
-
-        lego = new Image(new ImageView(this),wheel.getId()+1,getResources().getDrawable(R.drawable.ic_lego));
-        lego.getParams().addRule(RelativeLayout.ABOVE, wheel.getImageView().getId());
-        lego.getParams().addRule(RelativeLayout.ALIGN_LEFT, wheel.getImageView().getId());
-        lego.getParams().setMargins(dpToPx(-10), 0, 0, 0);
-        relativeLayout.addView(lego.getImageView(), lego.getParams());
-
-        up=new ImageArrow(new ImageView(this),lego.getId()+1,getResources().getDrawable(R.drawable.move_up));
-        up.getParams().addRule(RelativeLayout.ABOVE, lego.getId());
-        up.getParams().addRule(RelativeLayout.ALIGN_START, lego.getId());
-        up.getParams().setMargins(dpToPx(5), 0, 0, dpToPx(12));
-        relativeLayout.addView(up.getImageView(), up.getParams());
-
-        across=new ImageArrow(new ImageView(this),up.getId()+1,getResources().getDrawable(R.drawable.move_across));
-        across.getParams().addRule(RelativeLayout.ABOVE,lego.getId());
-        across.getParams().addRule(RelativeLayout.ALIGN_END, lego.getId());
-        across.getParams().setMargins(0, 0, dpToPx(-35), dpToPx(12));
-        relativeLayout.addView(across.getImageView(), across.getParams());
-
-        back=new ImageArrow(new ImageView(this),across.getId()+1,getResources().getDrawable(R.drawable.move_back));
-        back.getParams().addRule(RelativeLayout.ALIGN_TOP,wheel.getId());
-        back.getParams().addRule(RelativeLayout.LEFT_OF, wheel.getId());
-        back.getParams().setMargins(0,dpToPx(15),dpToPx(12),0);
-        relativeLayout.addView(back.getImageView(),back.getParams());
-
-        front=new ImageArrow(new ImageView(this),back.getId()+1,getResources().getDrawable(R.drawable.move_front));
-        front.getParams().addRule(RelativeLayout.ALIGN_TOP,wheel.getId());
-        front.getParams().addRule(RelativeLayout.RIGHT_OF, wheel.getId());
-        front.getParams().setMargins(dpToPx(12),dpToPx(15),0,0);
-        relativeLayout.addView(front.getImageView(),front.getParams());*/
-
-
-        /*
-            <ImageView
-                android:id="@+id/lego"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@+id/wheel"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_marginLeft="70dp"
-                android:src="@drawable/ic_lego" />
-
-            <ImageView
-                android:id="@+id/move_up"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@id/lego"
-                android:layout_alignStart="@id/lego"
-                android:layout_marginBottom="12dp"
-                android:layout_marginLeft="5dp"
-                android:src="@drawable/move_up" />
-
-            <ImageView
-                android:id="@+id/move_across"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@+id/lego"
-                android:layout_alignEnd="@+id/lego"
-                android:layout_marginBottom="12dp"
-                android:layout_marginRight="-35dp"
-                android:src="@drawable/move_across" />
-
-            <ImageView
-                android:id="@+id/wheel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/lego"
-                android:layout_alignParentBottom="true"
-                android:layout_alignStart="@+id/lego"
-                android:layout_marginLeft="12dp"
-                android:src="@drawable/ic_wheel" />
-
-            <ImageView
-                android:id="@+id/back"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@id/wheel"
-                android:layout_marginTop="15dp"
-                android:layout_toLeftOf="@id/wheel"
-                android:src="@drawable/move_back" />
-
-            <ImageView
-                android:id="@+id/front"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@id/wheel"
-                android:layout_marginLeft="12dp"
-                android:layout_marginTop="15dp"
-                android:layout_toRightOf="@id/wheel"
-                android:src="@drawable/move_front" />
-                */
-
-
-
-
-
+            }
+        });
+        thread.start();
 
         mVisible = true;
         mControlsView = findViewById(R.id.fullscreen_content_controls);
@@ -358,7 +247,7 @@ public class Main extends AppCompatActivity {
         quitDialog.setPositiveButton("Да!", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                SmartM3.leave();
+                thread.interrupt();
                 finish();
             }
         });
@@ -385,23 +274,24 @@ public class Main extends AppCompatActivity {
 
         protected void onPostExecute(Integer status) {
             if (status != 0) {
+                Log.d("Status= ", "" + status);
                 robots.clear();
 
                 int count = Character.getNumericValue(String.valueOf(status).charAt(0));
-                for (int i = count; i >= 1; i++) {
+                for (int i = count; i >= 1; i--) {
                     boolean back = false, front = false, up = false, across = false;
                     if (status % 10 == 1) {
                         back = true;
                         front = true;
                     }
-                    status %= 10;
+                    status /= 10;
                     if (status % 10 == 1) {
                         up = true;
                     }
-                    status %= 10;
+                    status /= 10;
                     if (status == count)
                         across = true;
-                    paintBlock(i - 1, back, front, up, across);
+                    paintBlock(count - i, back, front, up, across);
 
                 }
 
