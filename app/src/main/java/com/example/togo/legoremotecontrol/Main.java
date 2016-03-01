@@ -13,6 +13,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import java.util.Vector;
@@ -40,16 +41,11 @@ public class Main extends AppCompatActivity {
      */
     private static final int UI_ANIMATION_DELAY = 300;
     public static Handler handler;
+    public static Context context;
+    public static ImageView imageView;
     private static Vector<ImageRobot> robots;
-    private static Context context;
     private static int relativeLayoutId;
     private final Handler mHideHandler = new Handler();
-    private final Runnable mHideRunnable = new Runnable() {
-        @Override
-        public void run() {
-            hide();
-        }
-    };
     /**
      * Touch listener to use for in-layout UI controls to delay hiding the
      * system UI. This is to prevent the jarring behavior of controls going away
@@ -98,6 +94,12 @@ public class Main extends AppCompatActivity {
                     | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         }
     };
+    private final Runnable mHideRunnable = new Runnable() {
+        @Override
+        public void run() {
+            hide();
+        }
+    };
     private boolean mVisible;
 
 
@@ -119,6 +121,7 @@ public class Main extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        imageView = (ImageView) findViewById(R.id.imageView);
         context = this;
 
         final RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.relativeLayout);
@@ -277,8 +280,8 @@ public class Main extends AppCompatActivity {
                 Log.d("Status= ", "" + status);
                 robots.clear();
 
-                int count = Character.getNumericValue(String.valueOf(status).charAt(0));
-                for (int i = count; i >= 1; i--) {
+                int count = Character.getNumericValue(String.valueOf(status).charAt(0)) - 1;
+                for (int i = 0; i <= count; i++) {
                     boolean back = false, front = false, up = false, across = false;
                     if (status % 10 == 1) {
                         back = true;
@@ -289,7 +292,7 @@ public class Main extends AppCompatActivity {
                         up = true;
                     }
                     status /= 10;
-                    if (status == count)
+                    if (status == count + 1)
                         across = true;
                     paintBlock(count - i, back, front, up, across);
 

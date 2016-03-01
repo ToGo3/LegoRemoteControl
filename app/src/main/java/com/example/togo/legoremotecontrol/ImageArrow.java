@@ -17,9 +17,7 @@ public class ImageArrow extends Image {
     public ImageArrow(ImageView imageView, int id, Drawable drawable, boolean isEnable, String name) {
         super(imageView, id, drawable);
         imageView.setVisibility(View.INVISIBLE); //default
-        bitmapOriginal = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
-        bitmapBig = Bitmap.createScaledBitmap(bitmapOriginal, bitmapOriginal.getWidth() + bitmapOriginal.getWidth() / 4,
-                bitmapOriginal.getHeight() + bitmapOriginal.getHeight() / 4, false);
+        setBitmap();
         setIsEnable(isEnable);
         setName(name);
     }
@@ -70,6 +68,13 @@ public class ImageArrow extends Image {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setBitmap() {
+        bitmapOriginal = ((BitmapDrawable) getImageView().getDrawable()).getBitmap();
+        bitmapBig = Bitmap.createScaledBitmap(bitmapOriginal, bitmapOriginal.getWidth() + bitmapOriginal.getWidth() / 4,
+                bitmapOriginal.getHeight() + bitmapOriginal.getHeight() / 4, false);
+
     }
 
 
