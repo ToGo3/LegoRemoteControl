@@ -42,7 +42,7 @@ public class SmartM3 {
             Vector<SmartSpaceTriplet> query = smartSpaceKPI.query(new SmartSpaceTriplet("robot", "blockAmount", null));
             if (!query.isEmpty()) {
                 status = Integer.parseInt(query.lastElement().getObject());
-                for (int i = 0; i < Integer.parseInt(query.lastElement().getObject()); i++) {
+                for (int i = Integer.parseInt(query.lastElement().getObject()) - 1; i >= 0; i--) {
                     status *= 100;
                     Vector<SmartSpaceTriplet> blockQuery = smartSpaceKPI.query(new SmartSpaceTriplet("block" + i, "has", null));
                     if (!blockQuery.isEmpty()) {

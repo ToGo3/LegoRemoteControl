@@ -2,6 +2,8 @@ package com.example.togo.legoremotecontrol;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.util.DisplayMetrics;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -48,6 +50,21 @@ public class ImageRobot {
     private int dpToPx(int dp) {
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+    }
+
+    public void initConnection() {
+        Image connectionLine = new Image(new ImageView(context), -1, null);
+        //Bitmap bitmapOriginal = ((BitmapDrawable) connectionLine.getImageView().getDrawable()).getBitmap();
+        Bitmap bitmapSmall = Bitmap.createScaledBitmap(((BitmapDrawable) context.getResources().getDrawable(R.drawable.blackline)).getBitmap(), dpToPx(70), 5
+                , false);
+
+        connectionLine.getParams().addRule(RelativeLayout.RIGHT_OF, this.block.getId());
+        connectionLine.getParams().addRule(RelativeLayout.ALIGN_TOP, this.block.getId());
+        connectionLine.getParams().setMargins(0, dpToPx(25), 0, 0);
+        connectionLine.getImageView().setImageBitmap(bitmapSmall);
+        relativeLayout.addView(connectionLine.getImageView(), connectionLine.getParams());
+
+        //connectionLine.show();
     }
 
     public void initWheelArrows(boolean isFrontEnable, boolean isBackEnable) {

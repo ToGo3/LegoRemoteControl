@@ -46,6 +46,12 @@ public class Main extends AppCompatActivity {
     private static Vector<ImageRobot> robots;
     private static int relativeLayoutId;
     private final Handler mHideHandler = new Handler();
+    private final Runnable mHideRunnable = new Runnable() {
+        @Override
+        public void run() {
+            hide();
+        }
+    };
     /**
      * Touch listener to use for in-layout UI controls to delay hiding the
      * system UI. This is to prevent the jarring behavior of controls going away
@@ -61,6 +67,7 @@ public class Main extends AppCompatActivity {
         }
     };
     //TODO почистить код от станадртных вложений
+    //TODO убрать появление строки состоояния при обновлении
     // TODO программно отрисовать 3 блок (найти картинку-связку)
     //TODO добавить кнопку стоп
     private Thread thread;
@@ -94,12 +101,6 @@ public class Main extends AppCompatActivity {
                     | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         }
     };
-    private final Runnable mHideRunnable = new Runnable() {
-        @Override
-        public void run() {
-            hide();
-        }
-    };
     private boolean mVisible;
 
 
@@ -111,9 +112,12 @@ public class Main extends AppCompatActivity {
 
     private static void paintBlock(int i, boolean back, boolean front, boolean up, boolean across) {
 
-        robots.add(new ImageRobot(context, relativeLayoutId + 1 + i * 2, dpToPx(70 + (i * 150)), "block" + i));
+        robots.add(new ImageRobot(context, relativeLayoutId + 1 + i * 2, dpToPx(75 + (i * 150)), "block" + i));
         robots.lastElement().initWheelArrows(front, back);
         robots.lastElement().initBlockArrows(up, across);
+        if (!across) {
+            robots.lastElement().initConnection();
+        }
 
     }
 
@@ -294,7 +298,7 @@ public class Main extends AppCompatActivity {
                     status /= 10;
                     if (status == count + 1)
                         across = true;
-                    paintBlock(count - i, back, front, up, across);
+                    paintBlock(i, back, front, up, across);
 
                 }
 

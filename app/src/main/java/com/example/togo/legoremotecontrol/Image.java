@@ -101,27 +101,33 @@ public class Image {
                             for (final ImageArrow imageArrow : args) {
                                 if (imageArrow.isEnable) {
                                     if (imageArrow.isTouched()) {
-                                        new useSmart().execute(new String[]{blockName, imageArrow.getName()});
-                                        if (imageArrow.getName().equals("rise")) {
-                                            imageArrow.setName("lower");
-                                            imageArrow.getImageView().setImageDrawable(Main.context.getResources().getDrawable(R.drawable.move_down));
-                                            imageArrow.setBitmap();
-                                        } else if (imageArrow.getName().equals("lower")) {
-                                            imageArrow.setName("rise");
-                                            imageArrow.getImageView().setImageDrawable(Main.context.getResources().getDrawable(R.drawable.move_up));
-                                            imageArrow.setBitmap();
+                                        if (imageArrow.getName().equals("across")) {
+                                            new useSmart().execute(new String[]{"robot", imageArrow.getName()});
                                         } else {
-                                            Main.imageView.setVisibility(View.VISIBLE);
-                                            Main.imageView.setOnTouchListener(new View.OnTouchListener() {
-                                                @Override
-                                                public boolean onTouch(View v, MotionEvent event) {
-                                                    new useSmart().execute(new String[]{blockName, "stop"});
-                                                    Main.imageView.setVisibility(View.INVISIBLE);
-                                                    imageArrow.hide();
-                                                    imageArrow.showOriginal();
-                                                    return false;
-                                                }
-                                            });
+                                            new useSmart().execute(new String[]{blockName, imageArrow.getName()});
+                                            if (imageArrow.getName().equals("rise")) {
+                                                imageArrow.setName("lower");
+                                                imageArrow.getImageView().setImageDrawable(Main.context.getResources().getDrawable(R.drawable.move_down));
+                                                imageArrow.setBitmap();
+                                                imageArrow.hide();
+                                            } else if (imageArrow.getName().equals("lower")) {
+                                                imageArrow.setName("rise");
+                                                imageArrow.getImageView().setImageDrawable(Main.context.getResources().getDrawable(R.drawable.move_up));
+                                                imageArrow.setBitmap();
+                                                imageArrow.hide();
+                                            } else {
+                                                Main.imageView.setVisibility(View.VISIBLE);
+                                                Main.imageView.setOnTouchListener(new View.OnTouchListener() {
+                                                    @Override
+                                                    public boolean onTouch(View v, MotionEvent event) {
+                                                        new useSmart().execute(new String[]{blockName, "stop"});
+                                                        Main.imageView.setVisibility(View.INVISIBLE);
+                                                        imageArrow.hide();
+                                                        imageArrow.showOriginal();
+                                                        return false;
+                                                    }
+                                                });
+                                            }
                                         }
                                     }
 
