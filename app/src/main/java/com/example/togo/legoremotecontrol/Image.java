@@ -2,11 +2,14 @@ package com.example.togo.legoremotecontrol;
 
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+
+import java.util.Calendar;
 
 import wrapper.SmartSpaceTriplet;
 
@@ -102,8 +105,10 @@ public class Image {
                                 if (imageArrow.isEnable) {
                                     if (imageArrow.isTouched()) {
                                         if (imageArrow.getName().equals("across")) {
+                                            Log.d("touchTime", " " + Calendar.getInstance().getTime());
                                             new useSmart().execute(new String[]{"robot", imageArrow.getName()});
                                         } else {
+                                            Log.d("touchTime", " " + Calendar.getInstance().getTime());
                                             new useSmart().execute(new String[]{blockName, imageArrow.getName()});
                                             if (imageArrow.getName().equals("rise")) {
                                                 imageArrow.setName("lower");

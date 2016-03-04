@@ -46,12 +46,6 @@ public class Main extends AppCompatActivity {
     private static Vector<ImageRobot> robots;
     private static int relativeLayoutId;
     private final Handler mHideHandler = new Handler();
-    private final Runnable mHideRunnable = new Runnable() {
-        @Override
-        public void run() {
-            hide();
-        }
-    };
     /**
      * Touch listener to use for in-layout UI controls to delay hiding the
      * system UI. This is to prevent the jarring behavior of controls going away
@@ -69,7 +63,7 @@ public class Main extends AppCompatActivity {
     //TODO почистить код от станадртных вложений
     //TODO убрать появление строки состоояния при обновлении
     // TODO программно отрисовать 3 блок (найти картинку-связку)
-    //TODO добавить кнопку стоп
+    //TODO добавить кнопку выход
     private Thread thread;
     private View mControlsView;
     private final Runnable mShowPart2Runnable = new Runnable() {
@@ -99,6 +93,12 @@ public class Main extends AppCompatActivity {
                     | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                     | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                     | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+        }
+    };
+    private final Runnable mHideRunnable = new Runnable() {
+        @Override
+        public void run() {
+            hide();
         }
     };
     private boolean mVisible;
@@ -254,6 +254,7 @@ public class Main extends AppCompatActivity {
         quitDialog.setPositiveButton("Да!", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+
                 thread.interrupt();
                 finish();
             }
@@ -270,7 +271,7 @@ public class Main extends AppCompatActivity {
     public static class updateFromSmart extends AsyncTask<Void, Void, Integer> {
 
         protected void onPreExecute() {
-            PD.showDialog(Main.context, "Inserting...");
+            PD.showDialog(Main.context, "Updating...");
         }
 
 
