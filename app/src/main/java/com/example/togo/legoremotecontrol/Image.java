@@ -75,7 +75,7 @@ public class Image {
                     switch (event.getActionMasked()) {
                         case MotionEvent.ACTION_DOWN:
                             for (ImageArrow imageArrow : args) {
-                                if (imageArrow.isEnable) {
+                                if (imageArrow != null) {
                                     imageArrow.show();
                                     imageArrow.setIsTouched(false);
                                     imageArrow.coordinates();
@@ -89,7 +89,7 @@ public class Image {
                             int eY = (int) event.getY() + getTopY();
 
                             for (ImageArrow imageArrow : args) {
-                                if (imageArrow.isEnable) {
+                                if (imageArrow != null) {
                                     if (imageArrow.isHit(eX, eY)) {
                                         imageArrow.showBig();
                                         imageArrow.setIsTouched(true);
@@ -102,9 +102,51 @@ public class Image {
                             break;
                         case MotionEvent.ACTION_UP:
                             for (final ImageArrow imageArrow : args) {
-                                if (imageArrow.isEnable) {
+                                if (imageArrow != null) {
                                     if (imageArrow.isTouched()) {
-                                        if (imageArrow.getName().equals("across")) {
+                                        switch (imageArrow.getName()) {
+                                            case "across":
+                                                Log.d("touchTime", " " + Calendar.getInstance().getTime());
+                                                new useSmart().execute(new String[]{"robot", imageArrow.getName()});
+                                                break;
+                                            case "rise":
+                                                new useSmart().execute(new String[]{blockName, imageArrow.getName()});
+                                                imageArrow.setName("lower");
+                                                imageArrow.getImageView().setImageDrawable(Main.context.getResources().getDrawable(R.drawable.move_down));
+                                                imageArrow.setBitmap();
+                                                imageArrow.hide();
+                                                break;
+                                            case "lower":
+                                                new useSmart().execute(new String[]{blockName, imageArrow.getName()});
+                                                imageArrow.setName("rise");
+                                                imageArrow.getImageView().setImageDrawable(Main.context.getResources().getDrawable(R.drawable.move_up));
+                                                imageArrow.setBitmap();
+                                                imageArrow.hide();
+                                                break;
+                                            case "allBack":
+                                                new useSmart().execute(new String[]{"robot", "back"});
+                                                break;
+                                            case "allFront":
+                                                new useSmart().execute(new String[]{"robot", "forward"});
+                                                break;
+                                            default:
+                                                new useSmart().execute(new String[]{blockName, imageArrow.getName()});
+                                                Main.imageView.setVisibility(View.VISIBLE);
+                                                Main.imageView.setOnTouchListener(new View.OnTouchListener() {
+                                                    @Override
+                                                    public boolean onTouch(View v, MotionEvent event) {
+                                                        new useSmart().execute(new String[]{"robot", "stop"});
+                                                        Main.imageView.setVisibility(View.INVISIBLE);
+                                                        imageArrow.hide();
+                                                        imageArrow.showOriginal();
+                                                        return false;
+                                                    }
+                                                });
+                                                break;
+
+                                        }
+
+/*                                        if (imageArrow.getName().equals("across")) {
                                             Log.d("touchTime", " " + Calendar.getInstance().getTime());
                                             new useSmart().execute(new String[]{"robot", imageArrow.getName()});
                                         } else {
@@ -125,7 +167,7 @@ public class Image {
                                                 Main.imageView.setOnTouchListener(new View.OnTouchListener() {
                                                     @Override
                                                     public boolean onTouch(View v, MotionEvent event) {
-                                                        new useSmart().execute(new String[]{blockName, "stop"});
+                                                        new useSmart().execute(new String[]{"robot", "stop"});
                                                         Main.imageView.setVisibility(View.INVISIBLE);
                                                         imageArrow.hide();
                                                         imageArrow.showOriginal();
@@ -133,7 +175,7 @@ public class Image {
                                                     }
                                                 });
                                             }
-                                        }
+                                        }*/
                                     }
 
                                         //Log.d("A", imageArrow.toString());

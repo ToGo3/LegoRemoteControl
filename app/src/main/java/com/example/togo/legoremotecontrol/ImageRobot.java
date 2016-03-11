@@ -14,7 +14,7 @@ import android.widget.RelativeLayout;
 public class ImageRobot {
 
     private Image block, wheel;
-    private ImageArrow back, front, up, across;
+    private ImageArrow back, front, up, across, allBack, allFront;
     private RelativeLayout relativeLayout;
     private String name;
     private Context context;
@@ -68,42 +68,64 @@ public class ImageRobot {
     }
 
     public void initWheelArrows(boolean isFrontEnable, boolean isBackEnable) {
+        if (isFrontEnable) {
+            front = new ImageArrow(new ImageView(context), -1, context.getResources().getDrawable(R.drawable.move_front), isFrontEnable, "forward");
+            front.getParams().addRule(RelativeLayout.ALIGN_TOP, this.wheel.getId());
+            front.getParams().addRule(RelativeLayout.RIGHT_OF, this.wheel.getId());
+            front.getParams().setMargins(dpToPx(12), dpToPx(15), 0, 0);
+            relativeLayout.addView(front.getImageView(), front.getParams());
+        } else front = null;
 
-        front = new ImageArrow(new ImageView(context), -1, context.getResources().getDrawable(R.drawable.move_front), isFrontEnable, "forward");
-        front.getParams().addRule(RelativeLayout.ALIGN_TOP, this.wheel.getId());
-        front.getParams().addRule(RelativeLayout.RIGHT_OF, this.wheel.getId());
-        front.getParams().setMargins(dpToPx(12), dpToPx(15), 0, 0);
-        relativeLayout.addView(front.getImageView(), front.getParams());
 
-
-        back = new ImageArrow(new ImageView(context), -1, context.getResources().getDrawable(R.drawable.move_back), isBackEnable, "back");
-        back.getParams().addRule(RelativeLayout.ALIGN_TOP, this.wheel.getId());
-        //back.getParams().addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-        back.getParams().addRule(RelativeLayout.LEFT_OF, this.block.getId());
-        back.getParams().setMargins(0, dpToPx(15), dpToPx(12), 0);
-        relativeLayout.addView(back.getImageView(), back.getParams());
+        if (isBackEnable) {
+            back = new ImageArrow(new ImageView(context), -1, context.getResources().getDrawable(R.drawable.move_back), isBackEnable, "back");
+            back.getParams().addRule(RelativeLayout.ALIGN_TOP, this.wheel.getId());
+            //back.getParams().addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+            back.getParams().addRule(RelativeLayout.LEFT_OF, this.block.getId());
+            back.getParams().setMargins(0, dpToPx(15), dpToPx(12), 0);
+            relativeLayout.addView(back.getImageView(), back.getParams());
+        } else back = null;
 
         this.wheel.setOnTouchListener(name, front, back);
 
     }
 
-    public void initBlockArrows(boolean isUpEnable, boolean isAcrossEnable) {
+    public void initBlockArrows(boolean isUpEnable, boolean isAcrossEnable, boolean isAllBackEnable, boolean isAllFrontEnable) {
 
-        up = new ImageArrow(new ImageView(context), -1, context.getResources().getDrawable(R.drawable.move_up), isUpEnable, "rise");
-        up.getParams().addRule(RelativeLayout.ABOVE, block.getId());
-        up.getParams().addRule(RelativeLayout.ALIGN_START, block.getId());
-        up.getParams().setMargins(dpToPx(5), 0, 0, dpToPx(12));
-        relativeLayout.addView(up.getImageView(), up.getParams());
-
-
-        across = new ImageArrow(new ImageView(context), up.getId() + 1, context.getResources().getDrawable(R.drawable.move_across), isAcrossEnable, "across");
-        across.getParams().addRule(RelativeLayout.ABOVE, block.getId());
-        across.getParams().addRule(RelativeLayout.ALIGN_END, block.getId());
-        across.getParams().setMargins(0, 0, dpToPx(-35), dpToPx(12));
-        relativeLayout.addView(across.getImageView(), across.getParams());
+        if (isUpEnable) {
+            up = new ImageArrow(new ImageView(context), -1, context.getResources().getDrawable(R.drawable.move_up), isUpEnable, "rise");
+            up.getParams().addRule(RelativeLayout.ABOVE, block.getId());
+            up.getParams().addRule(RelativeLayout.ALIGN_START, block.getId());
+            up.getParams().setMargins(dpToPx(5), 0, 0, dpToPx(12));
+            relativeLayout.addView(up.getImageView(), up.getParams());
+        } else up = null;
 
 
-        block.setOnTouchListener(name, up, across);
+        if (isAcrossEnable) {
+            across = new ImageArrow(new ImageView(context), up.getId() + 1, context.getResources().getDrawable(R.drawable.move_across), isAcrossEnable, "across");
+            across.getParams().addRule(RelativeLayout.ABOVE, block.getId());
+            across.getParams().addRule(RelativeLayout.ALIGN_END, block.getId());
+            across.getParams().setMargins(0, 0, dpToPx(-35), dpToPx(12));
+            relativeLayout.addView(across.getImageView(), across.getParams());
+        } else across = null;
+
+        if (isAllBackEnable) {
+            allBack = new ImageArrow(new ImageView(context), -1, context.getResources().getDrawable(R.drawable.move_back), isAllBackEnable, "allBack");
+            allBack.getParams().addRule(RelativeLayout.LEFT_OF, this.block.getId());
+            allBack.getParams().addRule(RelativeLayout.ABOVE, block.getId());
+            allBack.getParams().setMargins(dpToPx(12), dpToPx(-15), 0, 0);
+            relativeLayout.addView(allBack.getImageView(), allBack.getParams());
+        } else allBack = null;
+        if (isAllFrontEnable) {
+            allFront = new ImageArrow(new ImageView(context), -1, context.getResources().getDrawable(R.drawable.move_front), isAllBackEnable, "allFront");
+            allFront.getParams().addRule(RelativeLayout.RIGHT_OF, this.block.getId());
+            allFront.getParams().addRule(RelativeLayout.ABOVE, block.getId());
+            allFront.getParams().setMargins(dpToPx(12), dpToPx(-15), 0, 0);
+            relativeLayout.addView(allFront.getImageView(), allFront.getParams());
+
+        } else allFront = null;
+
+        block.setOnTouchListener(name, up, across, allBack, allFront);
     }
 
     public ImageArrow getFront() {

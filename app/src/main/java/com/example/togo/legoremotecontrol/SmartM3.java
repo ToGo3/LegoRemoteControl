@@ -15,7 +15,7 @@ import wrapper.SmartSpaceTriplet;
 public class SmartM3 {
 
     private static SmartSpaceKPI smartSpaceKPI;
-    private static SmartSpaceKPI smrtSubs;
+    private static SmartSpaceKPI smartSubs;
     private static String ip = "192.168.1.1";
 
     public static boolean insert(SmartSpaceTriplet triplet) {
@@ -77,8 +77,8 @@ public class SmartM3 {
 
     public static void subscribe() {
         try {
-            smrtSubs = new SmartSpaceKPI(ip, 10010, "x");
-            smrtSubs.subscribe(new SmartSpaceTriplet("robot", "blockAmount", null), new Handler());
+            smartSubs = new SmartSpaceKPI(ip, 10010, "x");
+            smartSubs.subscribe(new SmartSpaceTriplet("robot", "blockAmount", null), new Handler());
 
         } catch (SmartSpaceException e) {
             e.printStackTrace();
@@ -87,7 +87,7 @@ public class SmartM3 {
 
     public static void leave() {
         try {
-            smrtSubs.leave();
+            smartSubs.leave();
             Log.d("Phone", " unsubscribe");
         } catch (SmartSpaceException e) {
             e.printStackTrace();

@@ -46,6 +46,12 @@ public class Main extends AppCompatActivity {
     private static Vector<ImageRobot> robots;
     private static int relativeLayoutId;
     private final Handler mHideHandler = new Handler();
+    private final Runnable mHideRunnable = new Runnable() {
+        @Override
+        public void run() {
+            hide();
+        }
+    };
     /**
      * Touch listener to use for in-layout UI controls to delay hiding the
      * system UI. This is to prevent the jarring behavior of controls going away
@@ -95,12 +101,6 @@ public class Main extends AppCompatActivity {
                     | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         }
     };
-    private final Runnable mHideRunnable = new Runnable() {
-        @Override
-        public void run() {
-            hide();
-        }
-    };
     private boolean mVisible;
 
 
@@ -110,11 +110,11 @@ public class Main extends AppCompatActivity {
         return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
     }
 
-    private static void paintBlock(int i, boolean back, boolean front, boolean up, boolean across) {
+    private static void paintBlock(int i, boolean back, boolean front, boolean up, boolean across, boolean allBack, boolean allFront) {
 
         robots.add(new ImageRobot(context, relativeLayoutId + 1 + i * 2, dpToPx(75 + (i * 150)), "block" + i));
         robots.lastElement().initWheelArrows(front, back);
-        robots.lastElement().initBlockArrows(up, across);
+        robots.lastElement().initBlockArrows(up, across, allBack, allFront);
         if (!across) {
             robots.lastElement().initConnection();
         }
@@ -287,7 +287,7 @@ public class Main extends AppCompatActivity {
 
                 int count = Character.getNumericValue(String.valueOf(status).charAt(0)) - 1;
                 for (int i = 0; i <= count; i++) {
-                    boolean back = false, front = false, up = false, across = false;
+                    boolean back = false, front = false, up = false, across = false, allBack = false, allFront = false;
                     if (status % 10 == 1) {
                         back = true;
                         front = true;
@@ -297,9 +297,12 @@ public class Main extends AppCompatActivity {
                         up = true;
                     }
                     status /= 10;
-                    if (status == count + 1)
+                    if (status == count + 1) {
                         across = true;
-                    paintBlock(i, back, front, up, across);
+                        allFront = true;
+                    }
+                    allBack = (i == 0);
+                    paintBlock(i, back, front, up, across, allBack, allFront);
 
                 }
 
