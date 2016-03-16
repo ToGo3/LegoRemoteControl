@@ -125,9 +125,31 @@ public class Image {
                                                 break;
                                             case "allBack":
                                                 new useSmart().execute(new String[]{"robot", "back"});
+                                                Main.imageView.setVisibility(View.VISIBLE);
+                                                Main.imageView.setOnTouchListener(new View.OnTouchListener() {
+                                                    @Override
+                                                    public boolean onTouch(View v, MotionEvent event) {
+                                                        new useSmart().execute(new String[]{"robot", "stop"});
+                                                        Main.imageView.setVisibility(View.INVISIBLE);
+                                                        imageArrow.hide();
+                                                        imageArrow.showOriginal();
+                                                        return false;
+                                                    }
+                                                });
                                                 break;
                                             case "allFront":
                                                 new useSmart().execute(new String[]{"robot", "forward"});
+                                                Main.imageView.setVisibility(View.VISIBLE);
+                                                Main.imageView.setOnTouchListener(new View.OnTouchListener() {
+                                                    @Override
+                                                    public boolean onTouch(View v, MotionEvent event) {
+                                                        new useSmart().execute(new String[]{"robot", "stop"});
+                                                        Main.imageView.setVisibility(View.INVISIBLE);
+                                                        imageArrow.hide();
+                                                        imageArrow.showOriginal();
+                                                        return false;
+                                                    }
+                                                });
                                                 break;
                                             default:
                                                 new useSmart().execute(new String[]{blockName, imageArrow.getName()});
@@ -145,40 +167,7 @@ public class Image {
                                                 break;
 
                                         }
-
-/*                                        if (imageArrow.getName().equals("across")) {
-                                            Log.d("touchTime", " " + Calendar.getInstance().getTime());
-                                            new useSmart().execute(new String[]{"robot", imageArrow.getName()});
-                                        } else {
-                                            Log.d("touchTime", " " + Calendar.getInstance().getTime());
-                                            new useSmart().execute(new String[]{blockName, imageArrow.getName()});
-                                            if (imageArrow.getName().equals("rise")) {
-                                                imageArrow.setName("lower");
-                                                imageArrow.getImageView().setImageDrawable(Main.context.getResources().getDrawable(R.drawable.move_down));
-                                                imageArrow.setBitmap();
-                                                imageArrow.hide();
-                                            } else if (imageArrow.getName().equals("lower")) {
-                                                imageArrow.setName("rise");
-                                                imageArrow.getImageView().setImageDrawable(Main.context.getResources().getDrawable(R.drawable.move_up));
-                                                imageArrow.setBitmap();
-                                                imageArrow.hide();
-                                            } else {
-                                                Main.imageView.setVisibility(View.VISIBLE);
-                                                Main.imageView.setOnTouchListener(new View.OnTouchListener() {
-                                                    @Override
-                                                    public boolean onTouch(View v, MotionEvent event) {
-                                                        new useSmart().execute(new String[]{"robot", "stop"});
-                                                        Main.imageView.setVisibility(View.INVISIBLE);
-                                                        imageArrow.hide();
-                                                        imageArrow.showOriginal();
-                                                        return false;
-                                                    }
-                                                });
-                                            }
-                                        }*/
                                     }
-
-                                        //Log.d("A", imageArrow.toString());
                                     else
                                         imageArrow.hide();
                                 }
@@ -210,18 +199,7 @@ public class Image {
 
         @Override
         protected void onPostExecute(Boolean result) {
-            /*//PD.hideDialog();
-            if (result) {
 
-                ListOfLastUse.setList("ip_", ip);
-
-                Intent intent = new Intent(MainActivity.this, WordActivity.class).addFlags(
-                        Intent.FLAG_ACTIVITY_CLEAR_TASK).addFlags(
-                        Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-            } else {
-                PD.showToast(MainActivity.this, "Error! Check your connecting!");
-            }*/
         }
 
     }

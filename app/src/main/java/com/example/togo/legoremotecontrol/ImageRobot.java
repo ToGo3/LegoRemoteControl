@@ -113,14 +113,14 @@ public class ImageRobot {
             allBack = new ImageArrow(new ImageView(context), -1, context.getResources().getDrawable(R.drawable.move_back), isAllBackEnable, "allBack");
             allBack.getParams().addRule(RelativeLayout.LEFT_OF, this.block.getId());
             allBack.getParams().addRule(RelativeLayout.ABOVE, block.getId());
-            allBack.getParams().setMargins(dpToPx(12), dpToPx(-15), 0, 0);
+            allBack.getParams().setMargins(0, 0, dpToPx(15), dpToPx(-40));
             relativeLayout.addView(allBack.getImageView(), allBack.getParams());
         } else allBack = null;
         if (isAllFrontEnable) {
             allFront = new ImageArrow(new ImageView(context), -1, context.getResources().getDrawable(R.drawable.move_front), isAllBackEnable, "allFront");
             allFront.getParams().addRule(RelativeLayout.RIGHT_OF, this.block.getId());
             allFront.getParams().addRule(RelativeLayout.ABOVE, block.getId());
-            allFront.getParams().setMargins(dpToPx(12), dpToPx(-15), 0, 0);
+            allFront.getParams().setMargins(dpToPx(12), 0, 0, dpToPx(-40));
             relativeLayout.addView(allFront.getImageView(), allFront.getParams());
 
         } else allFront = null;
