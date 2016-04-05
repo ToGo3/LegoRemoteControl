@@ -67,9 +67,9 @@ public class ImageRobot {
         //connectionLine.show();
     }
 
-    public void initWheelArrows(boolean isFrontEnable, boolean isBackEnable) {
-        if (isFrontEnable) {
-            front = new ImageArrow(new ImageView(context), -1, context.getResources().getDrawable(R.drawable.move_front), isFrontEnable, "forward");
+    public void initWheelArrows(boolean isMoveEngine) {
+        if (isMoveEngine) {
+            front = new ImageArrow(new ImageView(context), -1, context.getResources().getDrawable(R.drawable.move_front), isMoveEngine, "forward");
             front.getParams().addRule(RelativeLayout.ALIGN_TOP, this.wheel.getId());
             front.getParams().addRule(RelativeLayout.RIGHT_OF, this.wheel.getId());
             front.getParams().setMargins(dpToPx(12), dpToPx(15), 0, 0);
@@ -77,8 +77,8 @@ public class ImageRobot {
         } else front = null;
 
 
-        if (isBackEnable) {
-            back = new ImageArrow(new ImageView(context), -1, context.getResources().getDrawable(R.drawable.move_back), isBackEnable, "back");
+        if (isMoveEngine) {
+            back = new ImageArrow(new ImageView(context), -1, context.getResources().getDrawable(R.drawable.move_back), isMoveEngine, "back");
             back.getParams().addRule(RelativeLayout.ALIGN_TOP, this.wheel.getId());
             //back.getParams().addRule(RelativeLayout.ALIGN_PARENT_LEFT);
             back.getParams().addRule(RelativeLayout.LEFT_OF, this.block.getId());
@@ -90,10 +90,10 @@ public class ImageRobot {
 
     }
 
-    public void initBlockArrows(boolean isUpEnable, boolean isAcrossEnable, boolean isAllBackEnable, boolean isAllFrontEnable) {
+    public void initBlockArrows(boolean isLiftEngine, boolean headBlock, boolean tailBlock) {
 
-        if (isUpEnable) {
-            up = new ImageArrow(new ImageView(context), -1, context.getResources().getDrawable(R.drawable.move_up), isUpEnable, "rise");
+        if (isLiftEngine) {
+            up = new ImageArrow(new ImageView(context), -1, context.getResources().getDrawable(R.drawable.move_up), isLiftEngine, "shrink");
             up.getParams().addRule(RelativeLayout.ABOVE, block.getId());
             up.getParams().addRule(RelativeLayout.ALIGN_START, block.getId());
             up.getParams().setMargins(dpToPx(5), 0, 0, dpToPx(12));
@@ -101,23 +101,24 @@ public class ImageRobot {
         } else up = null;
 
 
-        if (isAcrossEnable) {
-            across = new ImageArrow(new ImageView(context), up.getId() + 1, context.getResources().getDrawable(R.drawable.move_across), isAcrossEnable, "across");
+        if (headBlock) {
+            across = new ImageArrow(new ImageView(context), up.getId() + 1, context.getResources().getDrawable(R.drawable.move_across), headBlock, "across");
             across.getParams().addRule(RelativeLayout.ABOVE, block.getId());
             across.getParams().addRule(RelativeLayout.ALIGN_END, block.getId());
             across.getParams().setMargins(0, 0, dpToPx(-35), dpToPx(12));
             relativeLayout.addView(across.getImageView(), across.getParams());
         } else across = null;
 
-        if (isAllBackEnable) {
-            allBack = new ImageArrow(new ImageView(context), -1, context.getResources().getDrawable(R.drawable.move_back), isAllBackEnable, "allBack");
+        if (tailBlock) {
+            allBack = new ImageArrow(new ImageView(context), -1, context.getResources().getDrawable(R.drawable.move_back), tailBlock, "allBack");
             allBack.getParams().addRule(RelativeLayout.LEFT_OF, this.block.getId());
             allBack.getParams().addRule(RelativeLayout.ABOVE, block.getId());
             allBack.getParams().setMargins(0, 0, dpToPx(15), dpToPx(-40));
             relativeLayout.addView(allBack.getImageView(), allBack.getParams());
         } else allBack = null;
-        if (isAllFrontEnable) {
-            allFront = new ImageArrow(new ImageView(context), -1, context.getResources().getDrawable(R.drawable.move_front), isAllBackEnable, "allFront");
+
+        if (headBlock) {
+            allFront = new ImageArrow(new ImageView(context), -1, context.getResources().getDrawable(R.drawable.move_front), headBlock, "allFront");
             allFront.getParams().addRule(RelativeLayout.RIGHT_OF, this.block.getId());
             allFront.getParams().addRule(RelativeLayout.ABOVE, block.getId());
             allFront.getParams().setMargins(dpToPx(12), 0, 0, dpToPx(-40));
@@ -134,6 +135,18 @@ public class ImageRobot {
 
     public ImageArrow getBack() {
         return back;
+    }
+
+    public ImageArrow getUp() {
+        return up;
+    }
+
+    public ImageArrow getAllBack() {
+        return allBack;
+    }
+
+    public ImageArrow getAllFront() {
+        return allFront;
     }
 
     public String getName() {

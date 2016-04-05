@@ -23,7 +23,17 @@ public class Handler implements iKPIC_subscribeHandler2 {
         for (int i = 0; i < newTriples.size(); i++) {
             String temp = "New triple s= " + newTriples.elementAt(i).elementAt(0) + " + predicate " + newTriples.elementAt(i).elementAt(1) + " object = " + newTriples.elementAt(i).elementAt(2) + "\n";
             if (newTriples.elementAt(i).elementAt(1).equals("blockAmount")) {
-                Main.handler.sendEmptyMessage(1);
+                Main.handler.sendEmptyMessage(0);
+            }
+            if (newTriples.elementAt(i).elementAt(1).equals("event")) {
+                switch (newTriples.elementAt(i).elementAt(2)) {
+                    case "stopped":
+                        Main.handler.sendEmptyMessage(1);
+                        break;
+                    case "rised":
+                        Main.handler.sendMessage(Main.handler.obtainMessage(2, Integer.valueOf(newTriples.elementAt(i).elementAt(0).substring(5))));
+                        break;
+                }
             }
             Log.d("NewTriples= ", temp);
 

@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -34,12 +35,12 @@ public class Main extends AppCompatActivity {
         return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
     }
 
-    private static void paintBlock(int i, boolean back, boolean front, boolean up, boolean across, boolean allBack, boolean allFront) {
+    private static void paintBlock(int i, boolean moveEngine, boolean liftEngine, boolean headblock, boolean tailBlock) {
 
         robots.add(new ImageRobot(context, relativeLayoutId + 1 + i * 2, dpToPx(75 + (i * 150)), "block" + i));
-        robots.lastElement().initWheelArrows(front, back);
-        robots.lastElement().initBlockArrows(up, across, allBack, allFront);
-        if (!across) {
+        robots.lastElement().initWheelArrows(moveEngine);
+        robots.lastElement().initBlockArrows(liftEngine, headblock, tailBlock);
+        if (!tailBlock) {
             robots.lastElement().initConnection();
         }
 
@@ -65,8 +66,41 @@ public class Main extends AppCompatActivity {
 
         handler = new Handler() {
             public void handleMessage(android.os.Message msg) {
-                relativeLayout.removeAllViewsInLayout();
-                new updateFromSmart().execute();
+                switch (msg.what) {
+                    case 0:                     //update
+                        relativeLayout.removeAllViewsInLayout();
+                        new updateFromSmart().execute();
+                        break;
+                    case 1:                     //stumbled on the obstacle
+                        for (int i = 0; i < robots.size(); i++) {
+                            if (robots.elementAt(i).getFront() != null) {
+                                robots.elementAt(i).getFront().hide();
+                                robots.elementAt(i).getFront().showOriginal();
+                            }
+                            if (robots.elementAt(i).getBack() != null) {
+                                robots.elementAt(i).getBack().hide();
+                                robots.elementAt(i).getBack().showOriginal();
+                            }
+                            if (robots.elementAt(i).getUp() != null) {
+                                robots.elementAt(i).getUp().hide();
+                                robots.elementAt(i).getUp().showOriginal();
+                            }
+
+                        }
+                        robots.firstElement().getAllBack().hide();
+                        robots.firstElement().getAllBack().showOriginal();
+                        robots.lastElement().getAllFront().hide();
+                        robots.lastElement().getAllFront().showOriginal();
+                        imageView.setVisibility(View.INVISIBLE);
+                        break;
+                    case 2:                     //correctly rised
+                        robots.elementAt(msg.arg1).getUp().hide();
+                        robots.elementAt(msg.arg1).getUp().setName("lower");
+                        robots.elementAt(msg.arg1).getUp().getImageView().setImageDrawable(Main.context.getResources().getDrawable(R.drawable.move_down));
+                        robots.elementAt(msg.arg1).getUp().setBitmap();
+                        break;
+                }
+
             }
         };
 
@@ -79,8 +113,7 @@ public class Main extends AppCompatActivity {
                         SmartM3.leave();
                     }
 
-                }
-                while (true);
+                } while (true);
 
             }
         });
@@ -134,22 +167,14 @@ public class Main extends AppCompatActivity {
 
                 int count = Character.getNumericValue(String.valueOf(status).charAt(0)) - 1;
                 for (int i = 0; i <= count; i++) {
-                    boolean back = false, front = false, up = false, across = false, allBack = false, allFront = false;
-                    if (status % 10 == 1) {
-                        back = true;
-                        front = true;
-                    }
+                    boolean moveEngine, liftEngine, headBlock, tailBlock;
+                    moveEngine = (status % 10 == 1);
                     status /= 10;
-                    if (status % 10 == 1) {
-                        up = true;
-                    }
+                    liftEngine = (status % 10 == 1);
                     status /= 10;
-                    if (status == count + 1) {
-                        across = true;
-                        allFront = true;
-                    }
-                    allBack = (i == 0);
-                    paintBlock(i, back, front, up, across, allBack, allFront);
+                    headBlock = (status == count + 1);
+                    tailBlock = (i == 0);
+                    paintBlock(i, moveEngine, liftEngine, headBlock, tailBlock);
 
                 }
 

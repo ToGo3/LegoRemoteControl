@@ -77,8 +77,10 @@ public class SmartM3 {
 
     public static void subscribe() {
         try {
+            Handler handler = new Handler();
             smartSubs = new SmartSpaceKPI(ip, 10010, "x");
-            smartSubs.subscribe(new SmartSpaceTriplet("robot", "blockAmount", null), new Handler());
+            smartSubs.subscribe(new SmartSpaceTriplet("robot", "blockAmount", null), handler);
+            smartSubs.subscribe(new SmartSpaceTriplet(null, "event", null), handler);
 
         } catch (SmartSpaceException e) {
             e.printStackTrace();
@@ -87,7 +89,8 @@ public class SmartM3 {
 
     public static void leave() {
         try {
-            smartSubs.leave();
+            if (smartSubs != null)
+                smartSubs.leave();
             Log.d("Phone", " unsubscribe");
         } catch (SmartSpaceException e) {
             e.printStackTrace();
