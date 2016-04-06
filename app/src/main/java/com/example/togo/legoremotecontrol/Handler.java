@@ -30,7 +30,7 @@ public class Handler implements iKPIC_subscribeHandler2 {
                     case "stopped":
                         Main.handler.sendEmptyMessage(1);
                         break;
-                    case "rised":
+                    case "rose":
                         Main.handler.sendMessage(Main.handler.obtainMessage(2, Integer.valueOf(newTriples.elementAt(i).elementAt(0).substring(5))));
                         break;
                 }

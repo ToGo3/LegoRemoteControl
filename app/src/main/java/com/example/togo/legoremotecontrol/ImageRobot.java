@@ -93,7 +93,7 @@ public class ImageRobot {
     public void initBlockArrows(boolean isLiftEngine, boolean headBlock, boolean tailBlock) {
 
         if (isLiftEngine) {
-            up = new ImageArrow(new ImageView(context), -1, context.getResources().getDrawable(R.drawable.move_up), isLiftEngine, "shrink");
+            up = new ImageArrow(new ImageView(context), -1, context.getResources().getDrawable(R.drawable.move_up), isLiftEngine, "rise");
             up.getParams().addRule(RelativeLayout.ABOVE, block.getId());
             up.getParams().addRule(RelativeLayout.ALIGN_START, block.getId());
             up.getParams().setMargins(dpToPx(5), 0, 0, dpToPx(12));

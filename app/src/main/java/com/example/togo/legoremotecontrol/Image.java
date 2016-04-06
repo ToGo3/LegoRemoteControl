@@ -111,12 +111,12 @@ public class Image {
                                                 break;
                                             case "rise":
                                                 new useSmart().execute(new String[]{blockName, imageArrow.getName()});
-                                                imageArrow.setName("lower");
-                                                imageArrow.getImageView().setImageDrawable(Main.context.getResources().getDrawable(R.drawable.move_down));
-                                                imageArrow.setBitmap();
-                                                imageArrow.hide();
+                                                //imageArrow.setName("shrink");
+                                                //imageArrow.getImageView().setImageDrawable(Main.context.getResources().getDrawable(R.drawable.move_down));
+                                                //imageArrow.setBitmap();
+                                                //imageArrow.hide();
                                                 break;
-                                            case "lower":
+                                            case "shrink":
                                                 new useSmart().execute(new String[]{blockName, imageArrow.getName()});
                                                 imageArrow.setName("rise");
                                                 imageArrow.getImageView().setImageDrawable(Main.context.getResources().getDrawable(R.drawable.move_up));

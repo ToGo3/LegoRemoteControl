@@ -35,12 +35,12 @@ public class Main extends AppCompatActivity {
         return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
     }
 
-    private static void paintBlock(int i, boolean moveEngine, boolean liftEngine, boolean headblock, boolean tailBlock) {
+    private static void paintBlock(int i, boolean moveEngine, boolean liftEngine, boolean headBlock, boolean tailBlock) {
 
         robots.add(new ImageRobot(context, relativeLayoutId + 1 + i * 2, dpToPx(75 + (i * 150)), "block" + i));
         robots.lastElement().initWheelArrows(moveEngine);
-        robots.lastElement().initBlockArrows(liftEngine, headblock, tailBlock);
-        if (!tailBlock) {
+        robots.lastElement().initBlockArrows(liftEngine, headBlock, tailBlock);
+        if (!headBlock) {
             robots.lastElement().initConnection();
         }
 
@@ -95,7 +95,7 @@ public class Main extends AppCompatActivity {
                         break;
                     case 2:                     //correctly rised
                         robots.elementAt(msg.arg1).getUp().hide();
-                        robots.elementAt(msg.arg1).getUp().setName("lower");
+                        robots.elementAt(msg.arg1).getUp().setName("shrink");
                         robots.elementAt(msg.arg1).getUp().getImageView().setImageDrawable(Main.context.getResources().getDrawable(R.drawable.move_down));
                         robots.elementAt(msg.arg1).getUp().setBitmap();
                         break;
