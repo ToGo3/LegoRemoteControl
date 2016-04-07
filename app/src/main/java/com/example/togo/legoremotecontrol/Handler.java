@@ -11,12 +11,12 @@ import sofia_kp.iKPIC_subscribeHandler2;
  * Created by ToGo on 24.02.2016.
  */
 public class Handler implements iKPIC_subscribeHandler2 {
-    /* private KPICore uKP;
+    /* private SmartSpaceKPI uKP;
 
-     public Handler(KPICore uKP){
-         this.uKP=uKP;
+      public Handler(SmartSpaceKPI uKP){
+          this.uKP=uKP;
 
-     }*/
+      }*/
     @Override
     public void kpic_RDFEventHandler(Vector<Vector<String>> newTriples, Vector<Vector<String>> vector1, String s, String s1) {
 
@@ -29,9 +29,11 @@ public class Handler implements iKPIC_subscribeHandler2 {
                 switch (newTriples.elementAt(i).elementAt(2)) {
                     case "stopped":
                         Main.handler.sendEmptyMessage(1);
+                        //remove(newTriples.elementAt(i).elementAt(0), newTriples.elementAt(i).elementAt(1), newTriples.elementAt(i).elementAt(2));
                         break;
                     case "rose":
                         Main.handler.sendMessage(Main.handler.obtainMessage(2, Integer.valueOf(newTriples.elementAt(i).elementAt(0).substring(5))));
+                        //remove(newTriples.elementAt(i).elementAt(0),newTriples.elementAt(i).elementAt(1),newTriples.elementAt(i).elementAt(2));
                         break;
                 }
             }
@@ -55,5 +57,13 @@ public class Handler implements iKPIC_subscribeHandler2 {
 
     }
 
-    //public
+   /* public void remove(String subj, String pred, String obj){
+        try{
+            if(uKP!=null)
+                uKP.remove(new SmartSpaceTriplet(subj,pred,obj));
+        } catch (SmartSpaceException e) {
+            e.printStackTrace();
+        }
+
+    }*/
 }

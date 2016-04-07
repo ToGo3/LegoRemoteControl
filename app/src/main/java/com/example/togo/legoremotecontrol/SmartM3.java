@@ -18,6 +18,24 @@ public class SmartM3 {
     private static SmartSpaceKPI smartSubs;
     private static String ip = "192.168.1.1";
 
+    public static boolean check() {
+        try {
+            smartSpaceKPI = new SmartSpaceKPI(IPInsert.ip, 10010, "x");
+            return true;
+        } catch (SmartSpaceException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            if (smartSpaceKPI != null) {
+                try {
+                    smartSpaceKPI.leave();
+                } catch (SmartSpaceException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
     public static boolean insert(SmartSpaceTriplet triplet) {
         try {
             smartSpaceKPI = new SmartSpaceKPI(ip, 10010, "x");
@@ -40,10 +58,11 @@ public class SmartM3 {
         }
     }
 
+    //TODO insert update to handler
     public static int update() {
         int status = 0;
         try {
-            smartSpaceKPI = new SmartSpaceKPI(ip, 10010, "x");
+            smartSpaceKPI = new SmartSpaceKPI(IPInsert.ip, 10010, "x");
             Vector<SmartSpaceTriplet> query = smartSpaceKPI.query(new SmartSpaceTriplet("robot", "blockAmount", null));
             if (!query.isEmpty()) {
                 status = Integer.parseInt(query.lastElement().getObject());
@@ -78,7 +97,7 @@ public class SmartM3 {
     public static void subscribe() {
         try {
             Handler handler = new Handler();
-            smartSubs = new SmartSpaceKPI(ip, 10010, "x");
+            smartSubs = new SmartSpaceKPI(IPInsert.ip, 10010, "x");
             smartSubs.subscribe(new SmartSpaceTriplet("robot", "blockAmount", null), handler);
             smartSubs.subscribe(new SmartSpaceTriplet(null, "event", null), handler);
 
@@ -95,5 +114,15 @@ public class SmartM3 {
         } catch (SmartSpaceException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void remove(String obj, String pred, String subj) {
+        try {
+            if (smartSubs != null)
+                smartSubs.remove(new SmartSpaceTriplet(subj, pred, obj));
+        } catch (SmartSpaceException e) {
+            e.printStackTrace();
+        }
+
     }
 }

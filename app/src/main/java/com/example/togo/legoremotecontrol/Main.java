@@ -94,10 +94,10 @@ public class Main extends AppCompatActivity {
                         imageView.setVisibility(View.INVISIBLE);
                         break;
                     case 2:                     //correctly rised
-                        robots.elementAt(msg.arg1).getUp().hide();
-                        robots.elementAt(msg.arg1).getUp().setName("shrink");
-                        robots.elementAt(msg.arg1).getUp().getImageView().setImageDrawable(Main.context.getResources().getDrawable(R.drawable.move_down));
-                        robots.elementAt(msg.arg1).getUp().setBitmap();
+                        robots.elementAt(robots.size() - msg.arg1 - 1).getUp().hide();
+                        robots.elementAt(robots.size() - msg.arg1 - 1).getUp().setName("shrink");
+                        robots.elementAt(robots.size() - msg.arg1 - 1).getUp().getImageView().setImageDrawable(Main.context.getResources().getDrawable(R.drawable.move_down));
+                        robots.elementAt(robots.size() - msg.arg1 - 1).getUp().setBitmap();
                         break;
                 }
 
