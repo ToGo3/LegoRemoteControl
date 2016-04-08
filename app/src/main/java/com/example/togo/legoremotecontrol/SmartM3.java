@@ -16,7 +16,7 @@ public class SmartM3 {
 
     private static SmartSpaceKPI smartSpaceKPI;
     private static SmartSpaceKPI smartSubs;
-    private static String ip = "192.168.1.1";
+    private static String imp = "192.168.1.1";
 
     public static boolean check() {
         try {
@@ -38,7 +38,7 @@ public class SmartM3 {
 
     public static boolean insert(SmartSpaceTriplet triplet) {
         try {
-            smartSpaceKPI = new SmartSpaceKPI(ip, 10010, "x");
+            smartSpaceKPI = new SmartSpaceKPI(IPInsert.ip, 10010, "x");
             if (triplet != null) {
                 smartSpaceKPI.insert(triplet);
             }
@@ -100,8 +100,10 @@ public class SmartM3 {
             smartSubs = new SmartSpaceKPI(IPInsert.ip, 10010, "x");
             smartSubs.subscribe(new SmartSpaceTriplet("robot", "blockAmount", null), handler);
             smartSubs.subscribe(new SmartSpaceTriplet(null, "event", null), handler);
+            Log.d("Phone", " subscribe");
 
         } catch (SmartSpaceException e) {
+            Log.d("Phone", " Problems with subscribing");
             e.printStackTrace();
         }
     }
@@ -112,7 +114,8 @@ public class SmartM3 {
                 smartSubs.leave();
             Log.d("Phone", " unsubscribe");
         } catch (SmartSpaceException e) {
-            e.printStackTrace();
+            Log.d("Phone", " Problems with unsubscribing");
+            Log.d("Phone", e.getMessage());
         }
     }
 

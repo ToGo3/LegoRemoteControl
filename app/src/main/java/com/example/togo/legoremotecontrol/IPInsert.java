@@ -10,6 +10,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputFilter;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -39,6 +41,29 @@ public class IPInsert extends AppCompatActivity {
         ListOfLastUse.showList(ListOfLastUse.getList(this, "ip_"), lvMain, editText);
 
         //TODO:тесты
+
+        editText.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (event.getAction()==KeyEvent.ACTION_DOWN){
+                    Log.d("KEY ", " "+event.getKeyCode());
+                    switch (keyCode){
+                        case KeyEvent.KEYCODE_ENTER:
+                            connect();
+                            Log.d("KEY ", " " + keyCode);
+                            return true;
+                        case KeyEvent.KEYCODE_NAVIGATE_NEXT:
+                            connect();
+                            Log.d("KEY ", " " + keyCode);
+                            return true;
+                        default:
+                            Log.d("KEY ", " "+keyCode);
+                            break;
+                    }
+                }
+                return false;
+            }
+        });
 
         filters[0] = new InputFilter() {
             @Override
@@ -93,6 +118,10 @@ public class IPInsert extends AppCompatActivity {
     }
 
     public void onClick(View view) {
+       connect();
+    }
+
+    private void connect() {
         if (isOnline()) {
             if (IPAddressValidator.validate(editText.getText().toString())) {
                 InputMethodManager imm = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
