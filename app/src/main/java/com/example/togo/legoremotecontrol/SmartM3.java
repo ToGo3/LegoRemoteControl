@@ -16,19 +16,20 @@ public class SmartM3 {
 
     private static SmartSpaceKPI smartSpaceKPI;
     private static SmartSpaceKPI smartSubs;
+    private static SmartSpaceKPI smartCheck;
     private static String imp = "192.168.1.1";
 
     public static boolean check() {
         try {
-            smartSpaceKPI = new SmartSpaceKPI(IPInsert.ip, 10010, "x");
+            smartCheck = new SmartSpaceKPI(IPInsert.ip, 10010, "x");
             return true;
         } catch (SmartSpaceException e) {
             e.printStackTrace();
             return false;
         } finally {
-            if (smartSpaceKPI != null) {
+            if (smartCheck != null) {
                 try {
-                    smartSpaceKPI.leave();
+                    smartCheck.leave();
                 } catch (SmartSpaceException e) {
                     e.printStackTrace();
                 }
@@ -42,7 +43,7 @@ public class SmartM3 {
             if (triplet != null) {
                 smartSpaceKPI.insert(triplet);
             }
-            Log.d("insertTime", " " + Calendar.getInstance().getTime());
+            Log.d("insertTime", " ");
             return true;
         } catch (SmartSpaceException e) {
             e.printStackTrace();
@@ -104,7 +105,7 @@ public class SmartM3 {
 
         } catch (SmartSpaceException e) {
             Log.d("Phone", " Problems with subscribing");
-            e.printStackTrace();
+            Log.d("Phone ", e.getMessage());
         }
     }
 

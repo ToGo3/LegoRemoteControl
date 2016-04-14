@@ -31,10 +31,10 @@ public class Handler implements iKPIC_subscribeHandler2 {
                         Main.handler.sendEmptyMessage(1);
                         //remove(newTriples.elementAt(i).elementAt(0), newTriples.elementAt(i).elementAt(1), newTriples.elementAt(i).elementAt(2));
                         break;
-                    case "rose":
+                    /*case "rose":
                         Main.handler.sendMessage(Main.handler.obtainMessage(2, Integer.valueOf(newTriples.elementAt(i).elementAt(0).substring(5))));
                         //remove(newTriples.elementAt(i).elementAt(0),newTriples.elementAt(i).elementAt(1),newTriples.elementAt(i).elementAt(2));
-                        break;
+                        break;*/
                 }
             }
             Log.d("NewTriples= ", temp);
@@ -49,11 +49,13 @@ public class Handler implements iKPIC_subscribeHandler2 {
 
     @Override
     public void kpic_UnsubscribeEventHandler(String s) {
+        Log.d("UnsErrors ",s);
 
     }
 
     @Override
     public void kpic_ExceptionEventHandler(Throwable throwable) {
+        Log.d("Errors ", throwable.getMessage());
 
     }
 

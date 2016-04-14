@@ -27,7 +27,6 @@ public class Main extends AppCompatActivity {
     private Thread thread;
 
     //TODO speed and angle spinner
-    //TODO add fullscreen setIp activity
 
 
     public static int dpToPx(int dp) {
@@ -93,12 +92,12 @@ public class Main extends AppCompatActivity {
                         robots.lastElement().getAllFront().showOriginal();
                         imageView.setVisibility(View.INVISIBLE);
                         break;
-                    case 2:                     //correctly rised
+                    /*case 2:                     //correctly rised
                         robots.elementAt(robots.size() - msg.arg1 - 1).getUp().hide();
                         robots.elementAt(robots.size() - msg.arg1 - 1).getUp().setName("shrink");
                         robots.elementAt(robots.size() - msg.arg1 - 1).getUp().getImageView().setImageDrawable(Main.context.getResources().getDrawable(R.drawable.move_down));
                         robots.elementAt(robots.size() - msg.arg1 - 1).getUp().setBitmap();
-                        break;
+                        break;*/
                 }
 
             }

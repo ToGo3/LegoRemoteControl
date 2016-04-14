@@ -14,7 +14,7 @@ import android.widget.RelativeLayout;
 public class ImageRobot {
 
     private Image block, wheel;
-    private ImageArrow back, front, up, across, allBack, allFront;
+    private ImageArrow back, front, up, down, across, allBack, allFront;
     private RelativeLayout relativeLayout;
     private String name;
     private Context context;
@@ -101,11 +101,19 @@ public class ImageRobot {
         } else up = null;
 
 
+        if (isLiftEngine) {
+            down = new ImageArrow(new ImageView(context), up.getId() + 1, context.getResources().getDrawable(R.drawable.move_down), isLiftEngine, "shrink");
+            down.getParams().addRule(RelativeLayout.ABOVE, block.getId());
+            down.getParams().addRule(RelativeLayout.ALIGN_END, block.getId());
+            down.getParams().setMargins(0, 0, dpToPx(5), dpToPx(12));
+            relativeLayout.addView(down.getImageView(), down.getParams());
+        } else down = null;
+
         if (headBlock) {
             across = new ImageArrow(new ImageView(context), up.getId() + 1, context.getResources().getDrawable(R.drawable.move_across), headBlock, "across");
             across.getParams().addRule(RelativeLayout.ABOVE, block.getId());
             across.getParams().addRule(RelativeLayout.ALIGN_END, block.getId());
-            across.getParams().setMargins(0, 0, dpToPx(-35), dpToPx(12));
+            across.getParams().setMargins(0, 0, dpToPx(-65), dpToPx(12));
             relativeLayout.addView(across.getImageView(), across.getParams());
         } else across = null;
 
@@ -126,7 +134,7 @@ public class ImageRobot {
 
         } else allFront = null;
 
-        block.setOnTouchListener(name, up, across, allBack, allFront);
+        block.setOnTouchListener(name, up, down, across, allBack, allFront);
     }
 
     public ImageArrow getFront() {

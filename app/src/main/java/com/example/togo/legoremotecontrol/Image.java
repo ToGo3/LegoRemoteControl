@@ -106,7 +106,7 @@ public class Image {
                                     if (imageArrow.isTouched()) {
                                         switch (imageArrow.getName()) {
                                             case "across":
-                                                Log.d("touchTime", " " + Calendar.getInstance().getTime());
+                                                Log.d("touchTime", " ");
                                                 new useSmart().execute(new String[]{"robot", imageArrow.getName()});
                                                 break;
                                             case "rise":
@@ -118,10 +118,10 @@ public class Image {
                                                 break;
                                             case "shrink":
                                                 new useSmart().execute(new String[]{blockName, imageArrow.getName()});
-                                                imageArrow.setName("rise");
+                                                /*imageArrow.setName("rise");
                                                 imageArrow.getImageView().setImageDrawable(Main.context.getResources().getDrawable(R.drawable.move_up));
                                                 imageArrow.setBitmap();
-                                                imageArrow.hide();
+                                                imageArrow.hide();*/
                                                 break;
                                             case "allBack":
                                                 new useSmart().execute(new String[]{"robot", "back"});
