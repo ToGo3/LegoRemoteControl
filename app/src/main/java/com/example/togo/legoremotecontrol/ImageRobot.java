@@ -149,6 +149,8 @@ public class ImageRobot {
         return up;
     }
 
+    public ImageArrow getDown(){return down;}
+
     public ImageArrow getAllBack() {
         return allBack;
     }

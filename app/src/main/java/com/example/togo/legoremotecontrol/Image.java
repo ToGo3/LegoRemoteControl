@@ -9,8 +9,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import java.util.Calendar;
-
 import wrapper.SmartSpaceTriplet;
 
 /**
@@ -68,6 +66,23 @@ public class Image {
     }
 
     public void setOnTouchListener(final String blockName, final ImageArrow... args) {
+        Main.record.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (Main.recordFlag){
+                    new useSmart().execute(new String[]{"stopRecord", "rec"});
+                    Main.record.setImageDrawable(Main.context.getResources().getDrawable(R.drawable.ic_start_record));
+                    Main.recordFlag=false;
+                }
+                else
+                {
+                    new useSmart().execute(new String[]{"startRecord", "rec"});
+                    Main.record.setImageDrawable(Main.context.getResources().getDrawable(R.drawable.ic_stop_record));
+                    Main.recordFlag=true;
+                }
+                return false;
+            }
+        });
         if (args.length != 0) {
             this.imageView.setOnTouchListener(new View.OnTouchListener() {
                 @Override
@@ -111,26 +126,21 @@ public class Image {
                                                 break;
                                             case "rise":
                                                 new useSmart().execute(new String[]{blockName, imageArrow.getName()});
-                                                //imageArrow.setName("shrink");
-                                                //imageArrow.getImageView().setImageDrawable(Main.context.getResources().getDrawable(R.drawable.move_down));
-                                                //imageArrow.setBitmap();
-                                                //imageArrow.hide();
                                                 break;
                                             case "shrink":
                                                 new useSmart().execute(new String[]{blockName, imageArrow.getName()});
-                                                /*imageArrow.setName("rise");
-                                                imageArrow.getImageView().setImageDrawable(Main.context.getResources().getDrawable(R.drawable.move_up));
-                                                imageArrow.setBitmap();
-                                                imageArrow.hide();*/
+                                                break;
+                                            case "lower":
+                                                new useSmart().execute(new String[]{blockName, imageArrow.getName()});
                                                 break;
                                             case "allBack":
                                                 new useSmart().execute(new String[]{"robot", "back"});
-                                                Main.imageView.setVisibility(View.VISIBLE);
-                                                Main.imageView.setOnTouchListener(new View.OnTouchListener() {
+                                                Main.stop.setVisibility(View.VISIBLE);
+                                                Main.stop.setOnTouchListener(new View.OnTouchListener() {
                                                     @Override
                                                     public boolean onTouch(View v, MotionEvent event) {
                                                         new useSmart().execute(new String[]{"robot", "stop"});
-                                                        Main.imageView.setVisibility(View.INVISIBLE);
+                                                        Main.stop.setVisibility(View.INVISIBLE);
                                                         imageArrow.hide();
                                                         imageArrow.showOriginal();
                                                         return false;
@@ -139,12 +149,12 @@ public class Image {
                                                 break;
                                             case "allFront":
                                                 new useSmart().execute(new String[]{"robot", "forward"});
-                                                Main.imageView.setVisibility(View.VISIBLE);
-                                                Main.imageView.setOnTouchListener(new View.OnTouchListener() {
+                                                Main.stop.setVisibility(View.VISIBLE);
+                                                Main.stop.setOnTouchListener(new View.OnTouchListener() {
                                                     @Override
                                                     public boolean onTouch(View v, MotionEvent event) {
                                                         new useSmart().execute(new String[]{"robot", "stop"});
-                                                        Main.imageView.setVisibility(View.INVISIBLE);
+                                                        Main.stop.setVisibility(View.INVISIBLE);
                                                         imageArrow.hide();
                                                         imageArrow.showOriginal();
                                                         return false;
@@ -153,12 +163,12 @@ public class Image {
                                                 break;
                                             default:
                                                 new useSmart().execute(new String[]{blockName, imageArrow.getName()});
-                                                Main.imageView.setVisibility(View.VISIBLE);
-                                                Main.imageView.setOnTouchListener(new View.OnTouchListener() {
+                                                Main.stop.setVisibility(View.VISIBLE);
+                                                Main.stop.setOnTouchListener(new View.OnTouchListener() {
                                                     @Override
                                                     public boolean onTouch(View v, MotionEvent event) {
                                                         new useSmart().execute(new String[]{"robot", "stop"});
-                                                        Main.imageView.setVisibility(View.INVISIBLE);
+                                                        Main.stop.setVisibility(View.INVISIBLE);
                                                         imageArrow.hide();
                                                         imageArrow.showOriginal();
                                                         return false;

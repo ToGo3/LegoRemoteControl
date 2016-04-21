@@ -21,7 +21,9 @@ public class Main extends AppCompatActivity {
 
     public static Handler handler;
     public static Context context;
-    public static ImageView imageView;
+    public static ImageView stop;
+    public static ImageView record;
+    public static boolean recordFlag;
     private static Vector<ImageRobot> robots;
     private static int relativeLayoutId;
     private Thread thread;
@@ -54,7 +56,9 @@ public class Main extends AppCompatActivity {
 
 
         setContentView(R.layout.activity_main);
-        imageView = (ImageView) findViewById(R.id.imageView);
+        stop = (ImageView) findViewById(R.id.imageView);
+        record=(ImageView)findViewById(R.id.startRecord);
+        recordFlag=false;
         context = this;
 
         final RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.relativeLayout);
@@ -90,14 +94,18 @@ public class Main extends AppCompatActivity {
                         robots.firstElement().getAllBack().showOriginal();
                         robots.lastElement().getAllFront().hide();
                         robots.lastElement().getAllFront().showOriginal();
-                        imageView.setVisibility(View.INVISIBLE);
+                        stop.setVisibility(View.INVISIBLE);
                         break;
-                    /*case 2:                     //correctly rised
+                    case 2:                     //correctly rised
                         robots.elementAt(robots.size() - msg.arg1 - 1).getUp().hide();
-                        robots.elementAt(robots.size() - msg.arg1 - 1).getUp().setName("shrink");
-                        robots.elementAt(robots.size() - msg.arg1 - 1).getUp().getImageView().setImageDrawable(Main.context.getResources().getDrawable(R.drawable.move_down));
-                        robots.elementAt(robots.size() - msg.arg1 - 1).getUp().setBitmap();
-                        break;*/
+                        robots.elementAt(robots.size() - msg.arg1 - 1).getUp().showOriginal();
+                        robots.elementAt(robots.size() - msg.arg1 - 1).getDown().setName("lower");
+                        break;
+                    case 3:
+                        robots.elementAt(robots.size() - msg.arg1 - 1).getDown().hide();
+                        robots.elementAt(robots.size() - msg.arg1 - 1).getDown().showOriginal();
+                        robots.elementAt(robots.size() - msg.arg1 - 1).getDown().setName("shrink");
+                        break;
                 }
 
             }
@@ -176,6 +184,8 @@ public class Main extends AppCompatActivity {
                     paintBlock(i, moveEngine, liftEngine, headBlock, tailBlock);
 
                 }
+                if (robots.isEmpty())
+                    Main.record.setVisibility(View.INVISIBLE);
 
             }
             PD.hideDialog();

@@ -31,10 +31,14 @@ public class Handler implements iKPIC_subscribeHandler2 {
                         Main.handler.sendEmptyMessage(1);
                         //remove(newTriples.elementAt(i).elementAt(0), newTriples.elementAt(i).elementAt(1), newTriples.elementAt(i).elementAt(2));
                         break;
-                    /*case "rose":
+                    case "rose":
                         Main.handler.sendMessage(Main.handler.obtainMessage(2, Integer.valueOf(newTriples.elementAt(i).elementAt(0).substring(5))));
                         //remove(newTriples.elementAt(i).elementAt(0),newTriples.elementAt(i).elementAt(1),newTriples.elementAt(i).elementAt(2));
-                        break;*/
+                        break;
+                    case "lowered":
+                        Main.handler.sendMessage(Main.handler.obtainMessage(3, Integer.valueOf(newTriples.elementAt(i).elementAt(0).substring(5))));
+                        break;
+
                 }
             }
             Log.d("NewTriples= ", temp);
