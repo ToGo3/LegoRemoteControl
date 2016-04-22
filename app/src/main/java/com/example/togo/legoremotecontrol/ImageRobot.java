@@ -30,6 +30,8 @@ public class ImageRobot {
         wheel.getParams().setMargins(wheelLeftMargin, 0, 0, 0);
         relativeLayout.addView(wheel.getImageView(), wheel.getParams());
 
+        //TODO добавлять картинку в imageview, чтобы массштабировалась сама. margins передавать imageView
+
 
         block = new Image(new ImageView(context), wheel.getId() + 1, context.getResources().getDrawable(R.drawable.ic_lego));
         block.getParams().addRule(RelativeLayout.ABOVE, wheel.getImageView().getId());
