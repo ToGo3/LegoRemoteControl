@@ -155,7 +155,7 @@ public class IPInsert extends AppCompatActivity {
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            return SmartM3.check();
+            return true;
         }
 
         protected void onPreExecute() {
@@ -174,7 +174,7 @@ public class IPInsert extends AppCompatActivity {
                         Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
             } else {
-                PD.showToast(IPInsert.this, "Error! Check your connecting!");
+                PD.showToast(IPInsert.this, "Error! Check your connection!");
             }
         }
 

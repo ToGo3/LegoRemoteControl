@@ -114,10 +114,10 @@ public class Main extends AppCompatActivity {
         thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                SmartM3.subscribe();
+                //SmartM3.subscribe();
                 do {
                     if (Thread.interrupted()) {
-                        SmartM3.leave();
+                        //SmartM3.leave();
                     }
 
                 } while (true);
@@ -164,10 +164,11 @@ public class Main extends AppCompatActivity {
 
         @Override
         protected Integer doInBackground(Void... params) {
-            return SmartM3.update();
+            return 111;
         }
 
         protected void onPostExecute(Integer status) {
+            status=21111;
             if (status != 0) {
                 Log.d("Status= ", "" + status);
                 robots.clear();

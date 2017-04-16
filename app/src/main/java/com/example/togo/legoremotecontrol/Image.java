@@ -199,7 +199,7 @@ public class Image {
 
         @Override
         protected Boolean doInBackground(String[]... params) {
-            SmartM3.insert(new SmartSpaceTriplet(params[0][0], "commandIs", params[0][1]));
+            //SmartM3.insert(new SmartSpaceTriplet(params[0][0], "commandIs", params[0][1]));
             return true;
         }
 

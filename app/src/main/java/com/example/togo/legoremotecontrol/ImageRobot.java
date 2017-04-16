@@ -55,16 +55,19 @@ public class ImageRobot {
     }
 
     public void initConnection() {
-        Image connectionLine = new Image(new ImageView(context), -1, null);
+        ImageView connectionLine = new ImageView(context);
         //Bitmap bitmapOriginal = ((BitmapDrawable) connectionLine.getImageView().getDrawable()).getBitmap();
         Bitmap bitmapSmall = Bitmap.createScaledBitmap(((BitmapDrawable) context.getResources().getDrawable(R.drawable.blackline)).getBitmap(), dpToPx(70), 5
                 , false);
 
-        connectionLine.getParams().addRule(RelativeLayout.RIGHT_OF, this.block.getId());
-        connectionLine.getParams().addRule(RelativeLayout.ALIGN_TOP, this.block.getId());
-        connectionLine.getParams().setMargins(0, dpToPx(25), 0, 0);
-        connectionLine.getImageView().setImageBitmap(bitmapSmall);
-        relativeLayout.addView(connectionLine.getImageView(), connectionLine.getParams());
+        RelativeLayout.LayoutParams connectionLineRules=new RelativeLayout.LayoutParams(android.view.ViewGroup.LayoutParams.WRAP_CONTENT,android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
+        connectionLineRules.addRule(RelativeLayout.RIGHT_OF, this.block.getId());
+        connectionLineRules.addRule(RelativeLayout.ALIGN_TOP, this.block.getId());
+        //connectionLine.set.getParams().addRule(RelativeLayout.RIGHT_OF, this.block.getId());
+        //connectionLine.getParams().addRule(RelativeLayout.ALIGN_TOP, this.block.getId());
+        connectionLineRules.setMargins(0, dpToPx(25), 0, 0);
+        connectionLine.setImageBitmap(bitmapSmall);
+        relativeLayout.addView(connectionLine,connectionLineRules);
 
         //connectionLine.show();
     }
