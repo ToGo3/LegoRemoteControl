@@ -33,7 +33,7 @@ public class Main extends AppCompatActivity {
 
     public static int dpToPx(int dp) {
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-        return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+        return Math.round(dp * displayMetrics.density);
     }
 
     private static void paintBlock(int i, boolean moveEngine, boolean liftEngine, boolean headBlock, boolean tailBlock) {

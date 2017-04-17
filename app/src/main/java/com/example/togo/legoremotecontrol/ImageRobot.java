@@ -51,18 +51,18 @@ public class ImageRobot {
 
     private int dpToPx(int dp) {
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-        return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+        return Math.round(dp * displayMetrics.density);
     }
 
     public void initConnection() {
         ImageView connectionLine = new ImageView(context);
         //Bitmap bitmapOriginal = ((BitmapDrawable) connectionLine.getImageView().getDrawable()).getBitmap();
-        Bitmap bitmapSmall = Bitmap.createScaledBitmap(((BitmapDrawable) context.getResources().getDrawable(R.drawable.blackline)).getBitmap(), dpToPx(70), 5
-                , false);
+        //Bitmap bitmapSmall = Bitmap.createScaledBitmap(((BitmapDrawable) context.getResources().getDrawable(R.drawable.blackline)).getBitmap(), dpToPx(70), 5
+        //        , false);
 
         connectionLine.setImageDrawable(context.getResources().getDrawable(R.drawable.blackline));
 
-        RelativeLayout.LayoutParams connectionLineRules=new RelativeLayout.LayoutParams(dpToPx(60),android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
+        RelativeLayout.LayoutParams connectionLineRules=new RelativeLayout.LayoutParams(Math.round(70*context.getResources().getDisplayMetrics().density),android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
         connectionLineRules.addRule(RelativeLayout.RIGHT_OF, this.block.getId());
         connectionLineRules.addRule(RelativeLayout.ALIGN_TOP, this.block.getId());
         //connectionLine.set.getParams().addRule(RelativeLayout.RIGHT_OF, this.block.getId());
@@ -125,7 +125,7 @@ public class ImageRobot {
         } else across = null;
 
         if (tailBlock) {
-            allBack = new ImageArrow(new ImageView(context), -1, context.getResources().getDrawable(R.drawable.move_back), tailBlock, "allBack");
+            allBack = new ImageArrow(new ImageView(context), -1, context.getResources().getDrawable(R.drawable.move_back), tailBlock, "moveBack");
             allBack.getParams().addRule(RelativeLayout.LEFT_OF, this.block.getId());
             allBack.getParams().addRule(RelativeLayout.ABOVE, block.getId());
             allBack.getParams().setMargins(0, 0, dpToPx(15), dpToPx(-40));
@@ -133,7 +133,7 @@ public class ImageRobot {
         } else allBack = null;
 
         if (headBlock) {
-            allFront = new ImageArrow(new ImageView(context), -1, context.getResources().getDrawable(R.drawable.move_front), headBlock, "allFront");
+            allFront = new ImageArrow(new ImageView(context), -1, context.getResources().getDrawable(R.drawable.move_front), headBlock, "moveForward");
             allFront.getParams().addRule(RelativeLayout.RIGHT_OF, this.block.getId());
             allFront.getParams().addRule(RelativeLayout.ABOVE, block.getId());
             allFront.getParams().setMargins(dpToPx(12), 0, 0, dpToPx(-40));

@@ -133,8 +133,8 @@ public class Image {
                                             case "lower":
                                                 new useSmart().execute(new String[]{blockName, imageArrow.getName()});
                                                 break;
-                                            case "allBack":
-                                                new useSmart().execute(new String[]{"robot", "back"});
+                                            case "moveBack":
+                                                new useSmart().execute(new String[]{"robot", "moveBack"});
                                                 Main.stop.setVisibility(View.VISIBLE);
                                                 Main.stop.setOnTouchListener(new View.OnTouchListener() {
                                                     @Override
@@ -147,8 +147,8 @@ public class Image {
                                                     }
                                                 });
                                                 break;
-                                            case "allFront":
-                                                new useSmart().execute(new String[]{"robot", "forward"});
+                                            case "moveForward":
+                                                new useSmart().execute(new String[]{"robot", "moveForward"});
                                                 Main.stop.setVisibility(View.VISIBLE);
                                                 Main.stop.setOnTouchListener(new View.OnTouchListener() {
                                                     @Override
