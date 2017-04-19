@@ -66,7 +66,7 @@ public class Image {
     }
 
     public void setOnTouchListener(final String blockName, final ImageArrow... args) {
-        Main.record.setOnTouchListener(new View.OnTouchListener() {
+        Main.record.setOnTouchListener(new View.OnTouchListener() {//todo check counts of incoming
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (Main.recordFlag){
@@ -149,6 +149,7 @@ public class Image {
                                                 break;
                                             case "moveForward":
                                                 new useSmart().execute(new String[]{"robot1", "moveForward"});
+                                                Main.handler.sendMessage(Main.handler.obtainMessage(6,-1));
                                                 Main.stop.setVisibility(View.VISIBLE);
                                                 Main.stop.setOnTouchListener(new View.OnTouchListener() {
                                                     @Override
@@ -160,6 +161,10 @@ public class Image {
                                                         return false;
                                                     }
                                                 });
+                                                break;
+                                            case "forward":
+                                                new useSmart().execute(new String[]{"robot1|"+blockName, "moveForward"});
+                                                Main.handler.sendMessage(Main.handler.obtainMessage(6, blockName.charAt(blockName.length()-1)));
                                                 break;
                                             default:
                                                 new useSmart().execute(new String[]{"robot1|"+blockName, "move"+imageArrow.getName()});

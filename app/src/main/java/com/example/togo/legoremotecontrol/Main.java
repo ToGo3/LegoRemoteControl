@@ -12,6 +12,8 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -60,6 +62,9 @@ public class Main extends AppCompatActivity {
         record=(ImageView)findViewById(R.id.startRecord);
         recordFlag=false;
         context = this;
+
+        final Animation animationRotateClockwise = AnimationUtils.loadAnimation(
+                this, R.anim.rotate_clockwise);
 
         final RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.relativeLayout);
         relativeLayoutId = relativeLayout.getId();
@@ -111,6 +116,21 @@ public class Main extends AppCompatActivity {
                         break;
                     case 5: //obstacleInfo
                         Log.d("Phone","I'll draw u an obstacle with check mark");
+                        break;
+                    case 6: //rotate clockwise
+                        if (msg.obj.equals(-1)){
+                            for (ImageRobot img:robots){
+                                img.getWheel().getImageView().startAnimation(animationRotateClockwise);
+                            }
+                        }
+                        else {
+                            robots.elementAt(robots.size() - msg.arg1 - 1).getWheel().getImageView().startAnimation(animationRotateClockwise);
+                        }
+                        break;
+                    case 7: //rotate counterclockwise
+                        break;
+                    case 8: //TODO stop
+
                         break;
                     default:
                         Log.d("Phone","WTF?!");
@@ -177,7 +197,7 @@ public class Main extends AppCompatActivity {
         }
 
         protected void onPostExecute(Integer status) {
-            //status=21111;
+            status=21111;
             Main.record.setVisibility(View.INVISIBLE);
             robots.clear();
             if (status != 0) {

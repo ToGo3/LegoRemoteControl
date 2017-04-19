@@ -74,7 +74,7 @@ public class ImageRobot {
 
     public void initWheelArrows(boolean isMoveEngine) {
         if (isMoveEngine) {
-            front = new ImageArrow(new ImageView(context), -1, context.getResources().getDrawable(R.drawable.move_front), isMoveEngine, "Forward");
+            front = new ImageArrow(new ImageView(context), -1, context.getResources().getDrawable(R.drawable.move_front), isMoveEngine, "forward");
             front.getParams().addRule(RelativeLayout.ALIGN_TOP, this.wheel.getId());
             front.getParams().addRule(RelativeLayout.RIGHT_OF, this.wheel.getId());
             front.getParams().setMargins(dpToPx(12), dpToPx(15), 0, 0);
@@ -83,9 +83,8 @@ public class ImageRobot {
 
 
         if (isMoveEngine) {
-            back = new ImageArrow(new ImageView(context), -1, context.getResources().getDrawable(R.drawable.move_back), isMoveEngine, "Back");
+            back = new ImageArrow(new ImageView(context), -1, context.getResources().getDrawable(R.drawable.move_back), isMoveEngine, "back");
             back.getParams().addRule(RelativeLayout.ALIGN_TOP, this.wheel.getId());
-            //back.getParams().addRule(RelativeLayout.ALIGN_PARENT_LEFT);
             back.getParams().addRule(RelativeLayout.LEFT_OF, this.block.getId());
             back.getParams().setMargins(0, dpToPx(15), dpToPx(12), 0);
             relativeLayout.addView(back.getImageView(), back.getParams());
