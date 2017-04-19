@@ -102,7 +102,7 @@ public class IPInsert extends AppCompatActivity {
                 IPInsert.this);
         quitDialog.setTitle("Выход: Вы уверены?");
 
-        quitDialog.setPositiveButton("Да!", new DialogInterface.OnClickListener() {
+        quitDialog.setPositiveButton("Да", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 finish();
@@ -155,7 +155,7 @@ public class IPInsert extends AppCompatActivity {
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            return true;
+            return SmartM3.check();//true;
         }
 
         protected void onPreExecute() {

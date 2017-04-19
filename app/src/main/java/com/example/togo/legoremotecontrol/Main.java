@@ -42,7 +42,7 @@ public class Main extends AppCompatActivity {
         robots.lastElement().initWheelArrows(moveEngine);
         robots.lastElement().initBlockArrows(liftEngine, headBlock, tailBlock);
         if (!headBlock) {
-            robots.lastElement().initConnection();
+            robots.lastElement().initConnectionLine();
         }
 
     }
@@ -106,6 +106,15 @@ public class Main extends AppCompatActivity {
                         robots.elementAt(robots.size() - msg.arg1 - 1).getDown().showOriginal();
                         robots.elementAt(robots.size() - msg.arg1 - 1).getDown().setName("shrink");
                         break;
+                    case 4: //exploreObstacle
+                        Log.d("Phone","I'll draw u an obstacle with loading");
+                        break;
+                    case 5: //obstacleInfo
+                        Log.d("Phone","I'll draw u an obstacle with check mark");
+                        break;
+                    default:
+                        Log.d("Phone","WTF?!");
+                        break;
                 }
 
             }
@@ -114,7 +123,7 @@ public class Main extends AppCompatActivity {
         thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                //SmartM3.subscribe();
+                SmartM3.subscribe();
                 do {
                     if (Thread.interrupted()) {
                         //SmartM3.leave();
@@ -138,7 +147,7 @@ public class Main extends AppCompatActivity {
                 context);
         quitDialog.setTitle("Выход: Вы уверены?");
 
-        quitDialog.setPositiveButton("Да!", new DialogInterface.OnClickListener() {
+        quitDialog.setPositiveButton("Да", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
@@ -164,14 +173,15 @@ public class Main extends AppCompatActivity {
 
         @Override
         protected Integer doInBackground(Void... params) {
-            return 111;
+            return SmartM3.update();
         }
 
         protected void onPostExecute(Integer status) {
-            status=21111;
+            //status=21111;
+            Main.record.setVisibility(View.INVISIBLE);
+            robots.clear();
             if (status != 0) {
                 Log.d("Status= ", "" + status);
-                robots.clear();
 
                 int count = Character.getNumericValue(String.valueOf(status).charAt(0)) - 1;
                 for (int i = 0; i <= count; i++) {
@@ -185,8 +195,7 @@ public class Main extends AppCompatActivity {
                     paintBlock(i, moveEngine, liftEngine, headBlock, tailBlock);
 
                 }
-                if (robots.isEmpty())
-                    Main.record.setVisibility(View.INVISIBLE);
+                Main.record.setVisibility(View.VISIBLE);
 
             }
             PD.hideDialog();

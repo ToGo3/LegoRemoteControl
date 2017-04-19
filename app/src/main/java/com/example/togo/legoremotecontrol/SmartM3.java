@@ -18,6 +18,7 @@ public class SmartM3 {
     private static SmartSpaceKPI smartSubs;
     private static SmartSpaceKPI smartCheck;
     private static String imp = "192.168.1.1";
+    // TODO: 19.04.2017 to singleton 
 
     public static boolean check() {
         try {
@@ -61,21 +62,21 @@ public class SmartM3 {
 
     //TODO insert update to handler
     public static int update() {
-        int status = 0;
+        int count = 0;
         try {
             smartSpaceKPI = new SmartSpaceKPI(IPInsert.ip, 10010, "x");
-            Vector<SmartSpaceTriplet> query = smartSpaceKPI.query(new SmartSpaceTriplet("robot", "blockAmount", null));
+            Vector<SmartSpaceTriplet> query = smartSpaceKPI.query(new SmartSpaceTriplet("robot1", "blockAmount", null));
             if (!query.isEmpty()) {
-                status = Integer.parseInt(query.lastElement().getObject());
-                for (int i = Integer.parseInt(query.lastElement().getObject()) - 1; i >= 0; i--) {
-                    status *= 100;
-                    Vector<SmartSpaceTriplet> blockQuery = smartSpaceKPI.query(new SmartSpaceTriplet("block" + i, "has", null));
+                count = Integer.parseInt(query.lastElement().getObject());
+                for (int i = count - 1; i >= 0; i--) {
+                    count *= 100;
+                    Vector<SmartSpaceTriplet> blockQuery = smartSpaceKPI.query(new SmartSpaceTriplet("block" + i, "hasPart", null));
                     if (!blockQuery.isEmpty()) {
                         for (SmartSpaceTriplet triplet : blockQuery) {
                             if (triplet.getObject().equals("liftEngine"))
-                                status += 10;
+                                count += 10;
                             if (triplet.getObject().equals("moveEngine"))
-                                status += 1;
+                                count += 1;
                         }
                     }
                 }
@@ -91,7 +92,7 @@ public class SmartM3 {
                     e.printStackTrace();
                 }
             }
-            return status;
+            return count;
         }
     }
 
@@ -99,8 +100,9 @@ public class SmartM3 {
         try {
             Handler handler = new Handler();
             smartSubs = new SmartSpaceKPI(IPInsert.ip, 10010, "x");
-            smartSubs.subscribe(new SmartSpaceTriplet("robot", "blockAmount", null), handler);
+            smartSubs.subscribe(new SmartSpaceTriplet("robot1", "blockAmount", null), handler);
             smartSubs.subscribe(new SmartSpaceTriplet(null, "event", null), handler);
+            smartSubs.subscribe(new SmartSpaceTriplet(null, "task", null), handler);
             Log.d("Phone", " subscribe");
 
         } catch (SmartSpaceException e) {

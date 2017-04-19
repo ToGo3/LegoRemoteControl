@@ -120,26 +120,26 @@ public class Image {
                                 if (imageArrow != null) {
                                     if (imageArrow.isTouched()) {
                                         switch (imageArrow.getName()) {
-                                            case "across":
+                                            case "acrossObstacle":
                                                 Log.d("touchTime", " ");
-                                                new useSmart().execute(new String[]{"robot", imageArrow.getName()});
+                                                new useSmart().execute(new String[]{"robot1", imageArrow.getName()});
                                                 break;
                                             case "rise":
-                                                new useSmart().execute(new String[]{blockName, imageArrow.getName()});
+                                                new useSmart().execute(new String[]{"robot1|"+blockName, imageArrow.getName()});
                                                 break;
                                             case "shrink":
-                                                new useSmart().execute(new String[]{blockName, imageArrow.getName()});
+                                                new useSmart().execute(new String[]{"robot1|"+blockName, imageArrow.getName()});
                                                 break;
                                             case "lower":
-                                                new useSmart().execute(new String[]{blockName, imageArrow.getName()});
+                                                new useSmart().execute(new String[]{"robot1|"+blockName, imageArrow.getName()});
                                                 break;
                                             case "moveBack":
-                                                new useSmart().execute(new String[]{"robot", "moveBack"});
+                                                new useSmart().execute(new String[]{"robot1", "moveBack"});
                                                 Main.stop.setVisibility(View.VISIBLE);
                                                 Main.stop.setOnTouchListener(new View.OnTouchListener() {
                                                     @Override
                                                     public boolean onTouch(View v, MotionEvent event) {
-                                                        new useSmart().execute(new String[]{"robot", "stop"});
+                                                        new useSmart().execute(new String[]{"robot1", "stop"});
                                                         Main.stop.setVisibility(View.INVISIBLE);
                                                         imageArrow.hide();
                                                         imageArrow.showOriginal();
@@ -148,12 +148,12 @@ public class Image {
                                                 });
                                                 break;
                                             case "moveForward":
-                                                new useSmart().execute(new String[]{"robot", "moveForward"});
+                                                new useSmart().execute(new String[]{"robot1", "moveForward"});
                                                 Main.stop.setVisibility(View.VISIBLE);
                                                 Main.stop.setOnTouchListener(new View.OnTouchListener() {
                                                     @Override
                                                     public boolean onTouch(View v, MotionEvent event) {
-                                                        new useSmart().execute(new String[]{"robot", "stop"});
+                                                        new useSmart().execute(new String[]{"robot1", "stop"});
                                                         Main.stop.setVisibility(View.INVISIBLE);
                                                         imageArrow.hide();
                                                         imageArrow.showOriginal();
@@ -162,12 +162,12 @@ public class Image {
                                                 });
                                                 break;
                                             default:
-                                                new useSmart().execute(new String[]{blockName, imageArrow.getName()});
+                                                new useSmart().execute(new String[]{"robot1|"+blockName, "move"+imageArrow.getName()});
                                                 Main.stop.setVisibility(View.VISIBLE);
                                                 Main.stop.setOnTouchListener(new View.OnTouchListener() {
                                                     @Override
                                                     public boolean onTouch(View v, MotionEvent event) {
-                                                        new useSmart().execute(new String[]{"robot", "stop"});
+                                                        new useSmart().execute(new String[]{"robot1", "stop"});
                                                         Main.stop.setVisibility(View.INVISIBLE);
                                                         imageArrow.hide();
                                                         imageArrow.showOriginal();
@@ -199,7 +199,8 @@ public class Image {
 
         @Override
         protected Boolean doInBackground(String[]... params) {
-            //SmartM3.insert(new SmartSpaceTriplet(params[0][0], "commandIs", params[0][1]));
+            SmartM3.insert(new SmartSpaceTriplet(params[0][0], "task", params[0][1]));
+            Log.d("Command",params[0][0]+ " task "+ params[0][1]);
             return true;
         }
 

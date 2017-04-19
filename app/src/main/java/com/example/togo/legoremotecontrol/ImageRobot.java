@@ -30,8 +30,6 @@ public class ImageRobot {
         wheel.getParams().setMargins(wheelLeftMargin, 0, 0, 0);
         relativeLayout.addView(wheel.getImageView(), wheel.getParams());
 
-        //TODO добавлять картинку в imageview, чтобы массштабировалась сама. margins передавать imageView
-
 
         block = new Image(new ImageView(context), wheel.getId() + 1, context.getResources().getDrawable(R.drawable.ic_lego));
         block.getParams().addRule(RelativeLayout.ABOVE, wheel.getImageView().getId());
@@ -54,7 +52,7 @@ public class ImageRobot {
         return Math.round(dp * displayMetrics.density);
     }
 
-    public void initConnection() {
+    public void initConnectionLine() {
         ImageView connectionLine = new ImageView(context);
         //Bitmap bitmapOriginal = ((BitmapDrawable) connectionLine.getImageView().getDrawable()).getBitmap();
         //Bitmap bitmapSmall = Bitmap.createScaledBitmap(((BitmapDrawable) context.getResources().getDrawable(R.drawable.blackline)).getBitmap(), dpToPx(70), 5
@@ -76,7 +74,7 @@ public class ImageRobot {
 
     public void initWheelArrows(boolean isMoveEngine) {
         if (isMoveEngine) {
-            front = new ImageArrow(new ImageView(context), -1, context.getResources().getDrawable(R.drawable.move_front), isMoveEngine, "forward");
+            front = new ImageArrow(new ImageView(context), -1, context.getResources().getDrawable(R.drawable.move_front), isMoveEngine, "Forward");
             front.getParams().addRule(RelativeLayout.ALIGN_TOP, this.wheel.getId());
             front.getParams().addRule(RelativeLayout.RIGHT_OF, this.wheel.getId());
             front.getParams().setMargins(dpToPx(12), dpToPx(15), 0, 0);
@@ -85,7 +83,7 @@ public class ImageRobot {
 
 
         if (isMoveEngine) {
-            back = new ImageArrow(new ImageView(context), -1, context.getResources().getDrawable(R.drawable.move_back), isMoveEngine, "back");
+            back = new ImageArrow(new ImageView(context), -1, context.getResources().getDrawable(R.drawable.move_back), isMoveEngine, "Back");
             back.getParams().addRule(RelativeLayout.ALIGN_TOP, this.wheel.getId());
             //back.getParams().addRule(RelativeLayout.ALIGN_PARENT_LEFT);
             back.getParams().addRule(RelativeLayout.LEFT_OF, this.block.getId());
@@ -117,7 +115,7 @@ public class ImageRobot {
         } else down = null;
 
         if (headBlock) {
-            across = new ImageArrow(new ImageView(context), up.getId() + 1, context.getResources().getDrawable(R.drawable.move_across), headBlock, "across");
+            across = new ImageArrow(new ImageView(context), up.getId() + 1, context.getResources().getDrawable(R.drawable.move_across), headBlock, "acrossObstacle");
             across.getParams().addRule(RelativeLayout.ABOVE, block.getId());
             across.getParams().addRule(RelativeLayout.ALIGN_END, block.getId());
             across.getParams().setMargins(0, 0, dpToPx(-65), dpToPx(12));

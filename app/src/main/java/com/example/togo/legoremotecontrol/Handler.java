@@ -22,25 +22,38 @@ public class Handler implements iKPIC_subscribeHandler2 {
 
         for (int i = 0; i < newTriples.size(); i++) {
             String temp = "New triple s= " + newTriples.elementAt(i).elementAt(0) + " + predicate " + newTriples.elementAt(i).elementAt(1) + " object = " + newTriples.elementAt(i).elementAt(2) + "\n";
-            if (newTriples.elementAt(i).elementAt(1).equals("blockAmount")) {
-                Main.handler.sendEmptyMessage(0);
-            }
-            if (newTriples.elementAt(i).elementAt(1).equals("event")) {
-                switch (newTriples.elementAt(i).elementAt(2)) {
-                    case "stopped":
-                        Main.handler.sendEmptyMessage(1);
-                        //remove(newTriples.elementAt(i).elementAt(0), newTriples.elementAt(i).elementAt(1), newTriples.elementAt(i).elementAt(2));
-                        break;
-                    case "rose":
-                        Main.handler.sendMessage(Main.handler.obtainMessage(2, Integer.valueOf(newTriples.elementAt(i).elementAt(0).substring(5))));
-                        //remove(newTriples.elementAt(i).elementAt(0),newTriples.elementAt(i).elementAt(1),newTriples.elementAt(i).elementAt(2));
-                        break;
-                    case "lowered":
-                        Main.handler.sendMessage(Main.handler.obtainMessage(3, Integer.valueOf(newTriples.elementAt(i).elementAt(0).substring(5))));
-                        break;
+            switch (newTriples.elementAt(i).elementAt(1)){
+                case "blockAmount":
+                    Main.handler.sendEmptyMessage(0);
+                    break;
+                case "event":
+                    switch (newTriples.elementAt(i).elementAt(2)) {
+                        case "stopped":
+                            Main.handler.sendEmptyMessage(1);
+                            //remove(newTriples.elementAt(i).elementAt(0), newTriples.elementAt(i).elementAt(1), newTriples.elementAt(i).elementAt(2));
+                            break;
+                        case "rose":
+                            Main.handler.sendMessage(Main.handler.obtainMessage(2, Integer.valueOf(newTriples.elementAt(i).elementAt(0).substring(5))));
+                            //remove(newTriples.elementAt(i).elementAt(0),newTriples.elementAt(i).elementAt(1),newTriples.elementAt(i).elementAt(2));
+                            break;
+                        case "lowered":
+                            Main.handler.sendMessage(Main.handler.obtainMessage(3, Integer.valueOf(newTriples.elementAt(i).elementAt(0).substring(5))));
+                            break;
 
-                }
+                    }
+                    break;
+                case "task":
+                    switch (newTriples.elementAt(i).elementAt(2)) {
+                        case "exploreObstacle":
+                            Main.handler.sendEmptyMessage(4);
+                            break;
+                        case "obstacleInfo":
+                            Main.handler.sendEmptyMessage(5);
+                            break;
+                    }
+
             }
+
             Log.d("NewTriples= ", temp);
 
         }
