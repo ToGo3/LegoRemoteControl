@@ -135,6 +135,7 @@ public class Image {
                                                 break;
                                             case "moveBack":
                                                 new useSmart().execute(new String[]{"robot1", "moveBack"});
+                                                Main.handler.sendMessage(Main.handler.obtainMessage(7,-1));
                                                 Main.stop.setVisibility(View.VISIBLE);
                                                 Main.stop.setOnTouchListener(new View.OnTouchListener() {
                                                     @Override
@@ -164,7 +165,11 @@ public class Image {
                                                 break;
                                             case "forward":
                                                 new useSmart().execute(new String[]{"robot1|"+blockName, "moveForward"});
-                                                Main.handler.sendMessage(Main.handler.obtainMessage(6, blockName.charAt(blockName.length()-1)));
+                                                Main.handler.sendMessage(Main.handler.obtainMessage(6, Integer.parseInt(blockName.substring(5)),0)); //magic with arg1
+                                                break;
+                                            case "back":
+                                                new useSmart().execute(new String[]{"robot1|"+blockName, "moveBack"});
+                                                Main.handler.sendMessage(Main.handler.obtainMessage(7, Integer.parseInt(blockName.substring(5)),0));
                                                 break;
                                             default:
                                                 new useSmart().execute(new String[]{"robot1|"+blockName, "move"+imageArrow.getName()});

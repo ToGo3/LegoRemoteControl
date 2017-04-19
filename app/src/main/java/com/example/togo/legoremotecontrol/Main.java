@@ -63,8 +63,8 @@ public class Main extends AppCompatActivity {
         recordFlag=false;
         context = this;
 
-        final Animation animationRotateClockwise = AnimationUtils.loadAnimation(
-                this, R.anim.rotate_clockwise);
+        final Animation animationRotateClockwise = AnimationUtils.loadAnimation(this, R.anim.rotate_clockwise);
+        final Animation animationRotateCounterClockwise = AnimationUtils.loadAnimation(this,R.anim.rotate_counter_clockwise);
 
         final RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.relativeLayout);
         relativeLayoutId = relativeLayout.getId();
@@ -118,16 +118,24 @@ public class Main extends AppCompatActivity {
                         Log.d("Phone","I'll draw u an obstacle with check mark");
                         break;
                     case 6: //rotate clockwise
-                        if (msg.obj.equals(-1)){
+                        if (msg.obj!=null){
                             for (ImageRobot img:robots){
                                 img.getWheel().getImageView().startAnimation(animationRotateClockwise);
                             }
                         }
                         else {
-                            robots.elementAt(robots.size() - msg.arg1 - 1).getWheel().getImageView().startAnimation(animationRotateClockwise);
+                            robots.elementAt(msg.arg1).getWheel().getImageView().startAnimation(animationRotateClockwise);
                         }
                         break;
-                    case 7: //rotate counterclockwise
+                    case 7://rotate counterclockwise
+                        if (msg.obj!=null){
+                            for (ImageRobot img:robots){
+                                img.getWheel().getImageView().startAnimation(animationRotateCounterClockwise);
+                            }
+                        }
+                        else {
+                            robots.elementAt(msg.arg1).getWheel().getImageView().startAnimation(animationRotateCounterClockwise);
+                        }
                         break;
                     case 8: //TODO stop
 
