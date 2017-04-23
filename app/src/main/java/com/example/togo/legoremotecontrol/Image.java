@@ -83,6 +83,14 @@ public class Image {
                 return false;
             }
         });
+        Main.stop.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                new useSmart().execute(new String[]{"robot1", "stop"});
+                Main.handler.sendMessage(Main.handler.obtainMessage(8,-1));
+                return false;
+            }
+        });
         if (args.length != 0) {
             this.imageView.setOnTouchListener(new View.OnTouchListener() {
                 @Override
@@ -136,32 +144,30 @@ public class Image {
                                             case "moveBack":
                                                 new useSmart().execute(new String[]{"robot1", "moveBack"});
                                                 Main.handler.sendMessage(Main.handler.obtainMessage(7,-1));
-                                                Main.stop.setVisibility(View.VISIBLE);
-                                                Main.stop.setOnTouchListener(new View.OnTouchListener() {
+                                                /*Main.stop.setOnTouchListener(new View.OnTouchListener() {
                                                     @Override
                                                     public boolean onTouch(View v, MotionEvent event) {
                                                         new useSmart().execute(new String[]{"robot1", "stop"});
-                                                        Main.stop.setVisibility(View.INVISIBLE);
+                                                        Main.handler.sendMessage(Main.handler.obtainMessage(8,-1));
                                                         imageArrow.hide();
                                                         imageArrow.showOriginal();
                                                         return false;
                                                     }
-                                                });
+                                                });*/
                                                 break;
                                             case "moveForward":
                                                 new useSmart().execute(new String[]{"robot1", "moveForward"});
                                                 Main.handler.sendMessage(Main.handler.obtainMessage(6,-1));
-                                                Main.stop.setVisibility(View.VISIBLE);
-                                                Main.stop.setOnTouchListener(new View.OnTouchListener() {
+                                                /*Main.stop.setOnTouchListener(new View.OnTouchListener() {
                                                     @Override
                                                     public boolean onTouch(View v, MotionEvent event) {
                                                         new useSmart().execute(new String[]{"robot1", "stop"});
-                                                        Main.stop.setVisibility(View.INVISIBLE);
+                                                        Main.handler.sendMessage(Main.handler.obtainMessage(8,-1));
                                                         imageArrow.hide();
                                                         imageArrow.showOriginal();
                                                         return false;
                                                     }
-                                                });
+                                                });*/
                                                 break;
                                             case "forward":
                                                 new useSmart().execute(new String[]{"robot1|"+blockName, "moveForward"});
@@ -173,17 +179,17 @@ public class Image {
                                                 break;
                                             default:
                                                 new useSmart().execute(new String[]{"robot1|"+blockName, "move"+imageArrow.getName()});
-                                                Main.stop.setVisibility(View.VISIBLE);
+                                                /*Main.stop.setVisibility(View.VISIBLE);
                                                 Main.stop.setOnTouchListener(new View.OnTouchListener() {
                                                     @Override
                                                     public boolean onTouch(View v, MotionEvent event) {
                                                         new useSmart().execute(new String[]{"robot1", "stop"});
-                                                        Main.stop.setVisibility(View.INVISIBLE);
+                                                        Main.handler.sendMessage(Main.handler.obtainMessage(8, Integer.parseInt(blockName.substring(5)),0));
                                                         imageArrow.hide();
                                                         imageArrow.showOriginal();
                                                         return false;
                                                     }
-                                                });
+                                                });*/
                                                 break;
 
                                         }

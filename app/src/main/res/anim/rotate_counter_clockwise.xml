@@ -9,7 +9,6 @@
         android:pivotY="50%"
         android:startOffset="0"
         android:toDegrees="0"
-        android:repeatCount="infinite"
-        android:repeatMode = "restart"/>
+        android:repeatCount="infinite"/>
 
 </set>

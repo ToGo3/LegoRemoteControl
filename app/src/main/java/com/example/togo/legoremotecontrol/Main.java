@@ -117,7 +117,8 @@ public class Main extends AppCompatActivity {
                     case 5: //obstacleInfo
                         Log.d("Phone","I'll draw u an obstacle with check mark");
                         break;
-                    case 6: //rotate clockwise
+                    case 6: //rotate clockwise (move forward)
+                        animationRotateClockwise.setRepeatCount(-1);
                         if (msg.obj!=null){
                             for (ImageRobot img:robots){
                                 img.getWheel().getImageView().startAnimation(animationRotateClockwise);
@@ -126,8 +127,10 @@ public class Main extends AppCompatActivity {
                         else {
                             robots.elementAt(msg.arg1).getWheel().getImageView().startAnimation(animationRotateClockwise);
                         }
+                        Main.stop.setVisibility(View.VISIBLE);
                         break;
-                    case 7://rotate counterclockwise
+                    case 7://rotate counterclockwise (move back)
+                        animationRotateCounterClockwise.setRepeatCount(0);
                         if (msg.obj!=null){
                             for (ImageRobot img:robots){
                                 img.getWheel().getImageView().startAnimation(animationRotateCounterClockwise);
@@ -136,9 +139,29 @@ public class Main extends AppCompatActivity {
                         else {
                             robots.elementAt(msg.arg1).getWheel().getImageView().startAnimation(animationRotateCounterClockwise);
                         }
+                        Main.stop.setVisibility(View.VISIBLE);
                         break;
                     case 8: //TODO stop
-
+                        for (ImageRobot img:robots){
+                            if (img.isMoveEngine()) {
+                                img.getBack().hide();
+                                img.getBack().showOriginal();
+                                img.getFront().hide();
+                                img.getFront().showOriginal();
+                                img.getWheel().getImageView().clearAnimation();
+                                if (img.isHeadBlock()){
+                                    img.getAllFront().hide();
+                                    img.getAllFront().showOriginal();
+                                }
+                                if (img.isTailBlock()){
+                                    img.getAllBack().hide();
+                                    img.getAllBack().showOriginal();
+                                }
+                            }
+                        }
+                        /*animationRotateClockwise.setRepeatCount(0);
+                        animationRotateCounterClockwise.setRepeatCount(0);*/
+                        Main.stop.setVisibility(View.INVISIBLE);
                         break;
                     default:
                         Log.d("Phone","WTF?!");
@@ -201,11 +224,11 @@ public class Main extends AppCompatActivity {
 
         @Override
         protected Integer doInBackground(Void... params) {
-            return SmartM3.update();
+            return SmartM3.update();//1
         }
 
         protected void onPostExecute(Integer status) {
-            status=21111;
+            //status=21111;
             Main.record.setVisibility(View.INVISIBLE);
             robots.clear();
             if (status != 0) {

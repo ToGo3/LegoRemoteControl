@@ -18,6 +18,7 @@ public class ImageRobot {
     private RelativeLayout relativeLayout;
     private String name;
     private Context context;
+    private boolean isMoveEngine, isLiftEngine, isHeadBlock, isTailBlock;
 
     public ImageRobot(Context context, int wheelId, int wheelLeftMargin, String name) {
 
@@ -53,26 +54,17 @@ public class ImageRobot {
     }
 
     public void initConnectionLine() {
-        ImageView connectionLine = new ImageView(context);
-        //Bitmap bitmapOriginal = ((BitmapDrawable) connectionLine.getImageView().getDrawable()).getBitmap();
-        //Bitmap bitmapSmall = Bitmap.createScaledBitmap(((BitmapDrawable) context.getResources().getDrawable(R.drawable.blackline)).getBitmap(), dpToPx(70), 5
-        //        , false);
-
-        connectionLine.setImageDrawable(context.getResources().getDrawable(R.drawable.blackline));
+        ImageView connectionLine = new ImageView(context);connectionLine.setImageDrawable(context.getResources().getDrawable(R.drawable.blackline));
 
         RelativeLayout.LayoutParams connectionLineRules=new RelativeLayout.LayoutParams(Math.round(70*context.getResources().getDisplayMetrics().density),android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
         connectionLineRules.addRule(RelativeLayout.RIGHT_OF, this.block.getId());
         connectionLineRules.addRule(RelativeLayout.ALIGN_TOP, this.block.getId());
-        //connectionLine.set.getParams().addRule(RelativeLayout.RIGHT_OF, this.block.getId());
-        //connectionLine.getParams().addRule(RelativeLayout.ALIGN_TOP, this.block.getId());
         connectionLineRules.setMargins(0, dpToPx(25), 0, 0);
-        //connectionLine.setImageBitmap(bitmapSmall);
         relativeLayout.addView(connectionLine,connectionLineRules);
-
-        //connectionLine.show();
     }
 
     public void initWheelArrows(boolean isMoveEngine) {
+        this.isMoveEngine=isMoveEngine;
         if (isMoveEngine) {
             front = new ImageArrow(new ImageView(context), -1, context.getResources().getDrawable(R.drawable.move_front), isMoveEngine, "forward");
             front.getParams().addRule(RelativeLayout.ALIGN_TOP, this.wheel.getId());
@@ -95,7 +87,7 @@ public class ImageRobot {
     }
 
     public void initBlockArrows(boolean isLiftEngine, boolean headBlock, boolean tailBlock) {
-
+        this.isLiftEngine=isLiftEngine;
         if (isLiftEngine) {
             up = new ImageArrow(new ImageView(context), -1, context.getResources().getDrawable(R.drawable.move_up), isLiftEngine, "rise");
             up.getParams().addRule(RelativeLayout.ABOVE, block.getId());
@@ -113,6 +105,7 @@ public class ImageRobot {
             relativeLayout.addView(down.getImageView(), down.getParams());
         } else down = null;
 
+        this.isHeadBlock=headBlock;
         if (headBlock) {
             across = new ImageArrow(new ImageView(context), up.getId() + 1, context.getResources().getDrawable(R.drawable.move_across), headBlock, "acrossObstacle");
             across.getParams().addRule(RelativeLayout.ABOVE, block.getId());
@@ -121,6 +114,7 @@ public class ImageRobot {
             relativeLayout.addView(across.getImageView(), across.getParams());
         } else across = null;
 
+        this.isTailBlock=tailBlock;
         if (tailBlock) {
             allBack = new ImageArrow(new ImageView(context), -1, context.getResources().getDrawable(R.drawable.move_back), tailBlock, "moveBack");
             allBack.getParams().addRule(RelativeLayout.LEFT_OF, this.block.getId());
@@ -170,4 +164,21 @@ public class ImageRobot {
     public void setName(String name) {
         this.name = name;
     }
+
+    public Boolean isMoveEngine() {
+        return isMoveEngine;
+    }
+
+    public Boolean isLiftEngine() {
+        return isLiftEngine;
+    }
+
+    public Boolean isHeadBlock() {
+        return isHeadBlock;
+    }
+
+    public Boolean isTailBlock() {
+        return isTailBlock;
+    }
+
 }
