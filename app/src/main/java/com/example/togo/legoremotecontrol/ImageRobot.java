@@ -3,9 +3,14 @@ package com.example.togo.legoremotecontrol;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.DisplayMetrics;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 /**
@@ -13,12 +18,16 @@ import android.widget.RelativeLayout;
  */
 public class ImageRobot {
 
-    private Image block, wheel;
+    private Image block;
+    private Image wheel;
+
+    private Image obstacle;
     private ImageArrow back, front, up, down, across, allBack, allFront;
     private RelativeLayout relativeLayout;
     private String name;
     private Context context;
     private boolean isMoveEngine, isLiftEngine, isHeadBlock, isTailBlock;
+    private ProgressBar loader;
 
     public ImageRobot(Context context, int wheelId, int wheelLeftMargin, String name) {
 
@@ -112,6 +121,7 @@ public class ImageRobot {
             across.getParams().addRule(RelativeLayout.ALIGN_END, block.getId());
             across.getParams().setMargins(0, 0, dpToPx(-65), dpToPx(12));
             relativeLayout.addView(across.getImageView(), across.getParams());
+
         } else across = null;
 
         this.isTailBlock=tailBlock;
@@ -129,6 +139,21 @@ public class ImageRobot {
             allFront.getParams().addRule(RelativeLayout.ABOVE, block.getId());
             allFront.getParams().setMargins(dpToPx(12), 0, 0, dpToPx(-40));
             relativeLayout.addView(allFront.getImageView(), allFront.getParams());
+
+            obstacle = new Image(new ImageView(context), -2, context.getResources().getDrawable(R.drawable.ic_obstacle));
+            obstacle.getImageView().setVisibility(View.INVISIBLE);
+            obstacle.getParams().addRule(RelativeLayout.RIGHT_OF, this.block.getId());
+            obstacle.getParams().addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+            obstacle.getParams().setMargins(dpToPx(20),0,0,0);
+            relativeLayout.addView(obstacle.getImageView(),obstacle.getParams());
+
+            loader = new ProgressBar(context);
+            loader.setVisibility(View.INVISIBLE);
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.addRule(RelativeLayout.RIGHT_OF,obstacle.getId());
+            params.setMargins(dpToPx(-74),0,0,dpToPx(15));
+            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+            relativeLayout.addView(loader,params);
 
         } else allFront = null;
 
@@ -179,6 +204,18 @@ public class ImageRobot {
 
     public Boolean isTailBlock() {
         return isTailBlock;
+    }
+
+    public Image getObstacle() {
+        return obstacle;
+    }
+
+    public void setObstacle(Image obstacle) {
+        this.obstacle = obstacle;
+    }
+
+    public ProgressBar getLoader(){
+        return loader;
     }
 
 }

@@ -3,6 +3,8 @@ package com.example.togo.legoremotecontrol;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -25,6 +27,7 @@ public class Main extends AppCompatActivity {
     public static Context context;
     public static ImageView stop;
     public static ImageView record;
+
     public static boolean recordFlag;
     private static Vector<ImageRobot> robots;
     private static int relativeLayoutId;
@@ -46,6 +49,9 @@ public class Main extends AppCompatActivity {
         if (!headBlock) {
             robots.lastElement().initConnectionLine();
         }
+        else {
+
+        }
 
     }
 
@@ -62,6 +68,7 @@ public class Main extends AppCompatActivity {
         record=(ImageView)findViewById(R.id.startRecord);
         recordFlag=false;
         context = this;
+        //obstacle=(ImageView) findViewById(R.id.obstacle);
 
         final Animation animationRotateClockwise = AnimationUtils.loadAnimation(this, R.anim.rotate_clockwise);
         final Animation animationRotateCounterClockwise = AnimationUtils.loadAnimation(this,R.anim.rotate_counter_clockwise);
@@ -112,9 +119,15 @@ public class Main extends AppCompatActivity {
                         robots.elementAt(robots.size() - msg.arg1 - 1).getDown().setName("shrink");
                         break;
                     case 4: //exploreObstacle
+                        robots.lastElement().getObstacle().getImageView().setVisibility(View.VISIBLE);
+                        robots.lastElement().getLoader().setVisibility(View.VISIBLE);
+                        robots.lastElement().getAllFront().hide();
                         Log.d("Phone","I'll draw u an obstacle with loading");
                         break;
                     case 5: //obstacleInfo
+                        robots.lastElement().getObstacle().getImageView().setColorFilter(Color.GREEN, PorterDuff.Mode.OVERLAY);
+                        robots.lastElement().getLoader().setVisibility(View.GONE);
+                        Main.record.setVisibility(View.VISIBLE);
                         Log.d("Phone","I'll draw u an obstacle with check mark");
                         break;
                     case 6: //rotate clockwise (move forward)
@@ -138,10 +151,9 @@ public class Main extends AppCompatActivity {
                         }
                         else {
                             robots.elementAt(msg.arg1).getWheel().getImageView().startAnimation(animationRotateCounterClockwise);
-                        }
-                        Main.stop.setVisibility(View.VISIBLE);
+                        }Main.stop.setVisibility(View.VISIBLE);
                         break;
-                    case 8: //TODO stop
+                    case 8:
                         for (ImageRobot img:robots){
                             if (img.isMoveEngine()) {
                                 img.getBack().hide();
@@ -174,7 +186,7 @@ public class Main extends AppCompatActivity {
         thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                SmartM3.subscribe();
+                //SmartM3.subscribe();
                 do {
                     if (Thread.interrupted()) {
                         //SmartM3.leave();
@@ -223,12 +235,11 @@ public class Main extends AppCompatActivity {
 
 
         @Override
-        protected Integer doInBackground(Void... params) {
-            return SmartM3.update();//1
+        protected Integer doInBackground(Void... params) {return 1; //SmartM3.update();
         }
 
         protected void onPostExecute(Integer status) {
-            //status=21111;
+            status=21111;
             Main.record.setVisibility(View.INVISIBLE);
             robots.clear();
             if (status != 0) {
@@ -246,7 +257,6 @@ public class Main extends AppCompatActivity {
                     paintBlock(i, moveEngine, liftEngine, headBlock, tailBlock);
 
                 }
-                Main.record.setVisibility(View.VISIBLE);
 
             }
             PD.hideDialog();
