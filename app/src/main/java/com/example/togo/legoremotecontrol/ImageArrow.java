@@ -23,7 +23,7 @@ public class ImageArrow extends Image {
     }
 
     public void show() {
-        getImageView().setVisibility(View.VISIBLE);
+        if (isEnable) getImageView().setVisibility(View.VISIBLE);
     }
 
     public void hide() {

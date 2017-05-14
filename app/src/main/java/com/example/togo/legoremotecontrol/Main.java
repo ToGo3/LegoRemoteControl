@@ -44,8 +44,8 @@ public class Main extends AppCompatActivity {
     private static void paintBlock(int i, boolean moveEngine, boolean liftEngine, boolean headBlock, boolean tailBlock) {
 
         robots.add(new ImageRobot(context, relativeLayoutId + 1 + i * 2, dpToPx(75 + (i * 150)), "block" + i));
-        robots.lastElement().initWheelArrows(moveEngine);
         robots.lastElement().initBlockArrows(liftEngine, headBlock, tailBlock);
+        robots.lastElement().initWheelArrows(moveEngine);
         if (!headBlock) {
             robots.lastElement().initConnectionLine();
         }
@@ -72,6 +72,11 @@ public class Main extends AppCompatActivity {
 
         final Animation animationRotateClockwise = AnimationUtils.loadAnimation(this, R.anim.rotate_clockwise);
         final Animation animationRotateCounterClockwise = AnimationUtils.loadAnimation(this,R.anim.rotate_counter_clockwise);
+        /*final Animation animationLower = AnimationUtils.loadAnimation(this,R.anim.lower);
+        animationLower.setFillAfter(true);
+
+        final Animation animationLowerBlock = AnimationUtils.loadAnimation(this,R.anim.lower_block);
+        animationLowerBlock.setFillAfter(true);*/
 
         final RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.relativeLayout);
         relativeLayoutId = relativeLayout.getId();
@@ -121,17 +126,19 @@ public class Main extends AppCompatActivity {
                     case 4: //exploreObstacle
                         robots.lastElement().getObstacle().getImageView().setVisibility(View.VISIBLE);
                         robots.lastElement().getLoader().setVisibility(View.VISIBLE);
-                        robots.lastElement().getAllFront().hide();
+                        robots.lastElement().getAllFront().setIsEnable(false);
+                        robots.lastElement().getAcross().setIsEnable(false);
                         Log.d("Phone","I'll draw u an obstacle with loading");
                         break;
                     case 5: //obstacleInfo
                         robots.lastElement().getObstacle().getImageView().setColorFilter(Color.GREEN, PorterDuff.Mode.OVERLAY);
                         robots.lastElement().getLoader().setVisibility(View.GONE);
                         Main.record.setVisibility(View.VISIBLE);
+                        robots.lastElement().getAcross().setIsEnable(true);
                         Log.d("Phone","I'll draw u an obstacle with check mark");
                         break;
                     case 6: //rotate clockwise (move forward)
-                        animationRotateClockwise.setRepeatCount(-1);
+                        //animationRotateClockwise.setRepeatCount(-1);
                         if (msg.obj!=null){
                             for (ImageRobot img:robots){
                                 img.getWheel().getImageView().startAnimation(animationRotateClockwise);
@@ -143,7 +150,7 @@ public class Main extends AppCompatActivity {
                         Main.stop.setVisibility(View.VISIBLE);
                         break;
                     case 7://rotate counterclockwise (move back)
-                        animationRotateCounterClockwise.setRepeatCount(0);
+                        //animationRotateCounterClockwise.setRepeatCount(0);
                         if (msg.obj!=null){
                             for (ImageRobot img:robots){
                                 img.getWheel().getImageView().startAnimation(animationRotateCounterClockwise);
@@ -151,7 +158,12 @@ public class Main extends AppCompatActivity {
                         }
                         else {
                             robots.elementAt(msg.arg1).getWheel().getImageView().startAnimation(animationRotateCounterClockwise);
-                        }Main.stop.setVisibility(View.VISIBLE);
+                        }/*
+                        robots.lastElement().getBlock().getImageView().startAnimation(animationLowerBlock);
+                        robots.get(robots.size()-2).getConnectionLine().getImageView().startAnimation(animationLower);
+                        robots.lastElement().getWheel().getImageView().startAnimation(animationLowerBlock);
+                        robots.lastElement().getAllFront().getImageView().startAnimation(animationLowerBlock);*/
+                        Main.stop.setVisibility(View.VISIBLE);
                         break;
                     case 8:
                         for (ImageRobot img:robots){
@@ -175,6 +187,11 @@ public class Main extends AppCompatActivity {
                         animationRotateCounterClockwise.setRepeatCount(0);*/
                         Main.stop.setVisibility(View.INVISIBLE);
                         break;
+                    case 9:
+                        Main.record.setImageDrawable(Main.context.getResources().getDrawable(R.drawable.ic_stop_record));
+                        Main.recordFlag=true;
+                        robots.lastElement().getAllFront().setIsEnable(true);
+                        break;
                     default:
                         Log.d("Phone","WTF?!");
                         break;
@@ -186,7 +203,7 @@ public class Main extends AppCompatActivity {
         thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                //SmartM3.subscribe();
+                SmartM3.subscribe();
                 do {
                     if (Thread.interrupted()) {
                         //SmartM3.leave();
@@ -235,11 +252,11 @@ public class Main extends AppCompatActivity {
 
 
         @Override
-        protected Integer doInBackground(Void... params) {return 1; //SmartM3.update();
+        protected Integer doInBackground(Void... params) {return SmartM3.update(); //1
         }
 
         protected void onPostExecute(Integer status) {
-            status=21111;
+            //status=3110101;
             Main.record.setVisibility(View.INVISIBLE);
             robots.clear();
             if (status != 0) {

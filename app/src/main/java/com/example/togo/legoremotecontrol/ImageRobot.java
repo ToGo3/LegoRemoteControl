@@ -21,7 +21,7 @@ public class ImageRobot {
     private Image block;
     private Image wheel;
 
-    private Image obstacle;
+    private Image obstacle, connectionLine;
     private ImageArrow back, front, up, down, across, allBack, allFront;
     private RelativeLayout relativeLayout;
     private String name;
@@ -63,13 +63,12 @@ public class ImageRobot {
     }
 
     public void initConnectionLine() {
-        ImageView connectionLine = new ImageView(context);connectionLine.setImageDrawable(context.getResources().getDrawable(R.drawable.blackline));
-
+        connectionLine = new Image (new ImageView(context),-1,context.getResources().getDrawable(R.drawable.blackline));
         RelativeLayout.LayoutParams connectionLineRules=new RelativeLayout.LayoutParams(Math.round(70*context.getResources().getDisplayMetrics().density),android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
         connectionLineRules.addRule(RelativeLayout.RIGHT_OF, this.block.getId());
         connectionLineRules.addRule(RelativeLayout.ALIGN_TOP, this.block.getId());
         connectionLineRules.setMargins(0, dpToPx(25), 0, 0);
-        relativeLayout.addView(connectionLine,connectionLineRules);
+        relativeLayout.addView(connectionLine.getImageView(),connectionLineRules);
     }
 
     public void initWheelArrows(boolean isMoveEngine) {
@@ -97,6 +96,23 @@ public class ImageRobot {
 
     public void initBlockArrows(boolean isLiftEngine, boolean headBlock, boolean tailBlock) {
         this.isLiftEngine=isLiftEngine;
+        this.isHeadBlock=headBlock;
+        if (this.isHeadBlock()){
+            obstacle = new Image(new ImageView(context), -2, context.getResources().getDrawable(R.drawable.ic_obstacle));
+            obstacle.getImageView().setVisibility(View.INVISIBLE);
+            obstacle.getParams().addRule(RelativeLayout.RIGHT_OF, this.block.getId());
+            obstacle.getParams().addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+            obstacle.getParams().setMargins(dpToPx(20),0,0,0);
+            relativeLayout.addView(obstacle.getImageView(),obstacle.getParams());
+
+            loader = new ProgressBar(context);
+            loader.setVisibility(View.INVISIBLE);
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.addRule(RelativeLayout.RIGHT_OF,obstacle.getId());
+            params.setMargins(dpToPx(-74),0,0,dpToPx(15));
+            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+            relativeLayout.addView(loader,params);
+        }
         if (isLiftEngine) {
             up = new ImageArrow(new ImageView(context), -1, context.getResources().getDrawable(R.drawable.move_up), isLiftEngine, "rise");
             up.getParams().addRule(RelativeLayout.ABOVE, block.getId());
@@ -114,7 +130,6 @@ public class ImageRobot {
             relativeLayout.addView(down.getImageView(), down.getParams());
         } else down = null;
 
-        this.isHeadBlock=headBlock;
         if (headBlock) {
             across = new ImageArrow(new ImageView(context), up.getId() + 1, context.getResources().getDrawable(R.drawable.move_across), headBlock, "acrossObstacle");
             across.getParams().addRule(RelativeLayout.ABOVE, block.getId());
@@ -139,22 +154,6 @@ public class ImageRobot {
             allFront.getParams().addRule(RelativeLayout.ABOVE, block.getId());
             allFront.getParams().setMargins(dpToPx(12), 0, 0, dpToPx(-40));
             relativeLayout.addView(allFront.getImageView(), allFront.getParams());
-
-            obstacle = new Image(new ImageView(context), -2, context.getResources().getDrawable(R.drawable.ic_obstacle));
-            obstacle.getImageView().setVisibility(View.INVISIBLE);
-            obstacle.getParams().addRule(RelativeLayout.RIGHT_OF, this.block.getId());
-            obstacle.getParams().addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-            obstacle.getParams().setMargins(dpToPx(20),0,0,0);
-            relativeLayout.addView(obstacle.getImageView(),obstacle.getParams());
-
-            loader = new ProgressBar(context);
-            loader.setVisibility(View.INVISIBLE);
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.addRule(RelativeLayout.RIGHT_OF,obstacle.getId());
-            params.setMargins(dpToPx(-74),0,0,dpToPx(15));
-            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-            relativeLayout.addView(loader,params);
-
         } else allFront = null;
 
         block.setOnTouchListener(name, up, down, across, allBack, allFront);
@@ -216,6 +215,14 @@ public class ImageRobot {
 
     public ProgressBar getLoader(){
         return loader;
+    }
+
+    public Image getConnectionLine(){
+        return connectionLine;
+    }
+
+    public ImageArrow getAcross(){
+        return across;
     }
 
 }

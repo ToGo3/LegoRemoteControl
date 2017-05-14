@@ -155,7 +155,7 @@ public class IPInsert extends AppCompatActivity {
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            return true;//SmartM3.check();
+            return SmartM3.check();//true;
         }
 
         protected void onPreExecute() {

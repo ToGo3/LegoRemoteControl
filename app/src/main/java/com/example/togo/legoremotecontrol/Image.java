@@ -77,8 +77,7 @@ public class Image {
                 else
                 {
                     new useSmart().execute(new String[]{"startRecord", "rec"});
-                    Main.record.setImageDrawable(Main.context.getResources().getDrawable(R.drawable.ic_stop_record));
-                    Main.recordFlag=true;
+                    Main.handler.sendMessage(Main.handler.obtainMessage(9,-1));
                 }
                 return false;
             }
@@ -144,30 +143,10 @@ public class Image {
                                             case "moveBack":
                                                 new useSmart().execute(new String[]{"robot1", "moveBack"});
                                                 Main.handler.sendMessage(Main.handler.obtainMessage(7,-1));
-                                                /*Main.stop.setOnTouchListener(new View.OnTouchListener() {
-                                                    @Override
-                                                    public boolean onTouch(View v, MotionEvent event) {
-                                                        new useSmart().execute(new String[]{"robot1", "stop"});
-                                                        Main.handler.sendMessage(Main.handler.obtainMessage(8,-1));
-                                                        imageArrow.hide();
-                                                        imageArrow.showOriginal();
-                                                        return false;
-                                                    }
-                                                });*/
                                                 break;
                                             case "moveForward":
                                                 new useSmart().execute(new String[]{"robot1", "moveForward"});
                                                 Main.handler.sendMessage(Main.handler.obtainMessage(6,-1));
-                                                /*Main.stop.setOnTouchListener(new View.OnTouchListener() {
-                                                    @Override
-                                                    public boolean onTouch(View v, MotionEvent event) {
-                                                        new useSmart().execute(new String[]{"robot1", "stop"});
-                                                        Main.handler.sendMessage(Main.handler.obtainMessage(8,-1));
-                                                        imageArrow.hide();
-                                                        imageArrow.showOriginal();
-                                                        return false;
-                                                    }
-                                                });*/
                                                 break;
                                             case "forward":
                                                 new useSmart().execute(new String[]{"robot1|"+blockName, "moveForward"});
@@ -179,17 +158,6 @@ public class Image {
                                                 break;
                                             default:
                                                 new useSmart().execute(new String[]{"robot1|"+blockName, "move"+imageArrow.getName()});
-                                                /*Main.stop.setVisibility(View.VISIBLE);
-                                                Main.stop.setOnTouchListener(new View.OnTouchListener() {
-                                                    @Override
-                                                    public boolean onTouch(View v, MotionEvent event) {
-                                                        new useSmart().execute(new String[]{"robot1", "stop"});
-                                                        Main.handler.sendMessage(Main.handler.obtainMessage(8, Integer.parseInt(blockName.substring(5)),0));
-                                                        imageArrow.hide();
-                                                        imageArrow.showOriginal();
-                                                        return false;
-                                                    }
-                                                });*/
                                                 break;
 
                                         }
@@ -215,7 +183,7 @@ public class Image {
 
         @Override
         protected Boolean doInBackground(String[]... params) {
-            //SmartM3.insert(new SmartSpaceTriplet(params[0][0], "task", params[0][1]));
+            SmartM3.insert(new SmartSpaceTriplet(params[0][0], "task", params[0][1]));
             Log.d("Command",params[0][0]+ " task "+ params[0][1]);
             return true;
         }
