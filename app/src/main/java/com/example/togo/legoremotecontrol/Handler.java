@@ -47,10 +47,21 @@ public class Handler implements iKPIC_subscribeHandler2 {
                         case "exploreObstacle":
                             Main.handler.sendEmptyMessage(4);
                             break;
-                        case "obstacleInfo":
+                        /*case "obstacleInfo":
                             Main.handler.sendEmptyMessage(5);
+                            break;*/
+                    }
+                    break;
+                case "acrossResult":
+                    switch (newTriples.elementAt(i).elementAt(2)) {
+                        case "success":
+                            Main.handler.sendEmptyMessage(10);
+                            break;
+                        case "fail":
+                            Main.handler.sendEmptyMessage(11);
                             break;
                     }
+                    break;
 
             }
 

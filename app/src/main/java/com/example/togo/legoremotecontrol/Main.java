@@ -192,6 +192,18 @@ public class Main extends AppCompatActivity {
                         Main.recordFlag=true;
                         robots.lastElement().getAllFront().setIsEnable(true);
                         break;
+                    case 10://acrossResult success
+                        robots.lastElement().getObstacle().getImageView().setColorFilter(Color.GREEN, PorterDuff.Mode.OVERLAY);
+                        robots.lastElement().getLoader().setVisibility(View.GONE);
+                        //Main.record.setVisibility(View.VISIBLE);
+                        robots.lastElement().getAcross().setIsEnable(true);
+                        break;
+                    case 11: //acrossResult fail
+                        robots.lastElement().getObstacle().getImageView().setColorFilter(Color.RED, PorterDuff.Mode.OVERLAY);
+                        robots.lastElement().getLoader().setVisibility(View.GONE);
+                        Main.record.setVisibility(View.VISIBLE);
+                        robots.lastElement().getAllFront().setIsEnable(true);
+                        break;
                     default:
                         Log.d("Phone","WTF?!");
                         break;

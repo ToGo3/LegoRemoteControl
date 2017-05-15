@@ -103,6 +103,7 @@ public class SmartM3 {
             smartSubs.subscribe(new SmartSpaceTriplet("robot1", "blockAmount", null), handler);
             smartSubs.subscribe(new SmartSpaceTriplet(null, "event", null), handler);
             smartSubs.subscribe(new SmartSpaceTriplet(null, "task", null), handler);
+            smartSubs.subscribe(new SmartSpaceTriplet("robot1", "acrossResult", null), handler);
             Log.d("Phone", " subscribe");
 
         } catch (SmartSpaceException e) {
