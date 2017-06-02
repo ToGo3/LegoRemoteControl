@@ -86,7 +86,7 @@ public class Image {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 new useSmart().execute(new String[]{"robot1", "stop"});
-                Main.handler.sendMessage(Main.handler.obtainMessage(8,-1));
+                Main.handler.sendEmptyMessage(1);
                 return false;
             }
         });

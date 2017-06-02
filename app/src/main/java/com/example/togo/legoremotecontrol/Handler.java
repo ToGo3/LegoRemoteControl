@@ -45,6 +45,7 @@ public class Handler implements iKPIC_subscribeHandler2 {
                 case "task":
                     switch (newTriples.elementAt(i).elementAt(2)) {
                         case "exploreObstacle":
+                            Main.handler.sendEmptyMessage(1);
                             Main.handler.sendEmptyMessage(4);
                             break;
                         /*case "obstacleInfo":

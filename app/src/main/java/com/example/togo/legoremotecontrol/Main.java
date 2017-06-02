@@ -92,26 +92,26 @@ public class Main extends AppCompatActivity {
                         new updateFromSmart().execute();
                         break;
                     case 1:                     //stumbled on the obstacle
-                        for (int i = 0; i < robots.size(); i++) {
-                            if (robots.elementAt(i).getFront() != null) {
-                                robots.elementAt(i).getFront().hide();
-                                robots.elementAt(i).getFront().showOriginal();
+                        for (ImageRobot img:robots){
+                            if (img.isMoveEngine()) {
+                                img.getBack().hide();
+                                img.getBack().showOriginal();
+                                img.getFront().hide();
+                                img.getFront().showOriginal();
+                                img.getWheel().getImageView().clearAnimation();
+                                if (img.isHeadBlock()){
+                                    img.getAllFront().hide();
+                                    img.getAllFront().showOriginal();
+                                }
+                                if (img.isTailBlock()){
+                                    img.getAllBack().hide();
+                                    img.getAllBack().showOriginal();
+                                }
                             }
-                            if (robots.elementAt(i).getBack() != null) {
-                                robots.elementAt(i).getBack().hide();
-                                robots.elementAt(i).getBack().showOriginal();
-                            }
-                            if (robots.elementAt(i).getUp() != null) {
-                                robots.elementAt(i).getUp().hide();
-                                robots.elementAt(i).getUp().showOriginal();
-                            }
-
                         }
-                        robots.firstElement().getAllBack().hide();
-                        robots.firstElement().getAllBack().showOriginal();
-                        robots.lastElement().getAllFront().hide();
-                        robots.lastElement().getAllFront().showOriginal();
-                        stop.setVisibility(View.INVISIBLE);
+                        /*animationRotateClockwise.setRepeatCount(0);
+                        animationRotateCounterClockwise.setRepeatCount(0);*/
+                        Main.stop.setVisibility(View.INVISIBLE);
                         break;
                     case 2:                     //correctly rised
                         robots.elementAt(robots.size() - msg.arg1 - 1).getUp().hide();
@@ -128,7 +128,7 @@ public class Main extends AppCompatActivity {
                         robots.lastElement().getLoader().setVisibility(View.VISIBLE);
                         robots.lastElement().getAllFront().setIsEnable(false);
                         robots.lastElement().getAcross().setIsEnable(false);
-                        Log.d("Phone","I'll draw u an obstacle with loading");
+                        Log.d("Obstacle","I'll draw u an obstacle with loading");
                         break;
                     case 5: //obstacleInfo
                         robots.lastElement().getObstacle().getImageView().setColorFilter(Color.GREEN, PorterDuff.Mode.OVERLAY);
@@ -166,27 +166,7 @@ public class Main extends AppCompatActivity {
                         Main.stop.setVisibility(View.VISIBLE);
                         break;
                     case 8:
-                        for (ImageRobot img:robots){
-                            if (img.isMoveEngine()) {
-                                img.getBack().hide();
-                                img.getBack().showOriginal();
-                                img.getFront().hide();
-                                img.getFront().showOriginal();
-                                img.getWheel().getImageView().clearAnimation();
-                                if (img.isHeadBlock()){
-                                    img.getAllFront().hide();
-                                    img.getAllFront().showOriginal();
-                                }
-                                if (img.isTailBlock()){
-                                    img.getAllBack().hide();
-                                    img.getAllBack().showOriginal();
-                                }
-                            }
-                        }
-                        /*animationRotateClockwise.setRepeatCount(0);
-                        animationRotateCounterClockwise.setRepeatCount(0);*/
-                        Main.stop.setVisibility(View.INVISIBLE);
-                        break;
+
                     case 9:
                         Main.record.setImageDrawable(Main.context.getResources().getDrawable(R.drawable.ic_stop_record));
                         Main.recordFlag=true;

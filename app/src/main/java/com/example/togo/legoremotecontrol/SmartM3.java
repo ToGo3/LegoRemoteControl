@@ -43,8 +43,8 @@ public class SmartM3 {
             smartSpaceKPI = new SmartSpaceKPI(IPInsert.ip, 10010, "x");
             if (triplet != null) {
                 smartSpaceKPI.insert(triplet);
+                Log.d("insertTime", triplet.getObject() +" ");
             }
-            Log.d("insertTime", " ");
             return true;
         } catch (SmartSpaceException e) {
             e.printStackTrace();
